@@ -15,7 +15,8 @@
 <link href="/vendors/nprogress/nprogress.css" rel="stylesheet">
 <!-- iCheck -->
 <link href="/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-
+<!-- Animate.css -->
+<link href="/vendors/animate.css/animate.min.css" rel="stylesheet">
 <!-- bootstrap-progressbar -->
 <link href="/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
 <!-- JQVMap -->

@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 
+Route::get('/admin/login', [Admincontroller::class, 'getFormLogin']);
+Route::post('/admin/login', [Admincontroller::class, 'login']);
+Route::get('/admin/register', [Admincontroller::class, 'getFormRegister']);
+Route::post('/admin/register', [Admincontroller::class, 'register']);
+
 Route::get('/admin', [Admincontroller::class, 'getDashboard']);
 Route::get('/admin/form', [Admincontroller::class, 'getForm']);
 Route::get('/admin/table', [Admincontroller::class, 'getTable']);
