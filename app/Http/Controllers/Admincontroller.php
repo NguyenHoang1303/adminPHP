@@ -7,7 +7,7 @@ use App\Http\Requests\admin\LoginRequest;
 use App\Http\Requests\admin\RegisterRequest;
 use App\Models\Admin;
 use App\Models\Category;
-use Faker\Provider\DateTime;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -106,8 +106,15 @@ class Admincontroller extends Controller
 
     function getCategories()
     {
-        $data = DB::table('categories')->get();
-        return view('admin.template.category.categories', ['data' => $data]);
+        $paginate = 1;
+        $categories = DB::table('categories');
+        $sumRecord = $categories->count();
+        $data = $categories->paginate($paginate);
+        return view('admin.template.category.categories', [
+            'data' => $data,
+            'sumRecord'=> $sumRecord,
+            'paginate'=> $paginate
+        ]);
     }
 
     function getFormCategory()
@@ -138,39 +145,57 @@ class Admincontroller extends Controller
     function deleteCategory($id)
     {
         $category = DB::table('categories')->where('id', $id);
-        if (!$category->exists()){
+        if (!$category->exists()) {
             return redirect()
                 ->back()
-                ->with('fail','Error! An error occurred. Please try again later. Please try again');
+                ->with('fail', 'Error! An error occurred. Please try again later. Please try again');
         }
-        $category->update(['status'=> 0]);
+        $category->update(['status' => 0]);
         return redirect()
             ->back()
-            ->with('deleteSuccess',"Delete success!");
+            ->with('deleteSuccess', "Delete success!");
     }
 
     function getInformationCategory($id)
     {
         $category = DB::table('categories')->where('id', $id);
-        if (!$category->exists()){
+        if (!$category->exists()) {
             return redirect()
                 ->back()
-                ->with('fail','Error! An error occurred. Please try again later. Please try again');
+                ->with('fail', 'Error! An error occurred. Please try again later. Please try again');
         }
-        return view('admin.template.category.form-category', ['item'=> $category->first()]);
+        return view('admin.template.category.form-category', ['item' => $category->first()]);
     }
 
     function updateInformationCategory(CategoryRequest $req)
     {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $category = DB::table('categories')->where('id',$req->get('id'));
+        $category = DB::table('categories')->where('id', $req->get('id'));
         $category->update([
-            'name'=> $req->get('name'),
-            'description'=> $req->get('description'),
-            'thumbnail'=> $req->get('thumbnail'),
-            'updated_at'=> date('Y-m-d H:i:s')
+            'name' => $req->get('name'),
+            'description' => $req->get('description'),
+            'thumbnail' => $req->get('thumbnail'),
+            'updated_at' => date('Y-m-d H:i:s')
         ]);
         return redirect('/admin/category')
             ->with('successUpdate', 'Successfully created a new account!');
+    }
+
+    function searchCategory(Request $request)
+    {
+        $name = $request->get('nameQuery');
+        if (isset($name)) {
+            $categories = DB::table('categories')->where('name', 'LIKE', "%${name}%")->get();
+            if (isset($categories)) {
+                return view('admin.template.category.categories', [
+                    'data' => $categories,
+                    'oldQuery' => $name
+                ]);
+            } else {
+                return view('admin.template.category.categories')
+                    ->with('search', 'Not fount');
+            }
+        }
+        return redirect('/admin/category');
     }
 }

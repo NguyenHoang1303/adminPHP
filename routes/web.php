@@ -33,10 +33,11 @@ Route::get('/admin/register', [Admincontroller::class, 'getFormRegister']);
 Route::post('/admin/register', [Admincontroller::class, 'register']);
 //==========================================================================================================
 //  Category
-Route::get('/admin/category', [Admincontroller::class, 'getCategories']);
+Route::get('/admin/category', [Admincontroller::class, 'getCategories'])->name('admin.categories');
 Route::get('/admin/category/form', [Admincontroller::class, 'getFormCategory']);
 Route::post('/admin/category/form', [Admincontroller::class, 'createCategory'])->name('admin.createCategory');
 Route::get('/admin/category/delete/{id}', [Admincontroller::class, 'deleteCategory']);
 Route::get('/admin/category/update/{id}', [Admincontroller::class, 'getInformationCategory']);
 Route::post('/admin/category/update', [Admincontroller::class, 'updateInformationCategory'])->name('admin.updateCategory');
+Route::get('/admin/category/search', [Admincontroller::class, 'searchCategory'])->name('admin.searchCategory');
 

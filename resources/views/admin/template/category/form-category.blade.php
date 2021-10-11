@@ -30,7 +30,7 @@
                             <label class="col-form-label col-md-3 col-sm-3 label-align"> Name *</label>
                             <div class="col-md-6 col-sm-6 ">
                                 <input type="text" name="name"
-                                       value="{{ !isset($item) ? request()->old('name') : $item->name}}"
+                                       value="{{ $item->name ?? request()->old('name') }}"
                                        class="form-control ">
                                 @if($errors->has('name'))
                                     <div class="error ">{{ $errors->first('name') }}</div>
@@ -43,7 +43,7 @@
                             <div class="col-md-6 col-sm-6 ">
                                 <label>
                                     <textarea style="width: 100%" name="description" rows="4" id="description"
-                                              cols="50">{{ isset($item) ? $item->description : request()->old('description') }}</textarea>
+                                              cols="50">{{ $item->description ?? request()->old('description') }}</textarea>
                                 </label>
                                 @if($errors->has('description'))
                                     <div class="error ">{{ $errors->first('description') }}</div>
@@ -59,16 +59,16 @@
                                     <div class="error ">{{ $errors->first('thumbnail') }}</div>
                                 @endif
                                 <input type="hidden" class="form-control" name="thumbnail"
-                                       value="{{ isset($item) ? $item->thumbnail : request()->old('thumbnail') }}">
+                                       value="{{ $item->thumbnail ?? request()->old('thumbnail') }}">
                                 <div id="preview-img"></div>
                             </div>
                         </div>
                         <div class="ln_solid"></div>
                         <div class="item form-group">
                             <div class="col-md-6 col-sm-6 offset-md-3">
-                                <a class="btn btn-primary" style="color: white" href="/admin">Cancel</a>
+                                <a class="btn btn-primary" style="color: white" href="{{route('admin.categories')}}">Cancel</a>
                                 <button class="btn btn-primary" id="reset" type="reset">Reset</button>
-                                <button class="btn btn-success">{{!isset($item)? 'Create':'Update'}}</button>
+                                <button class="btn btn-success">{{!isset($item) ? 'Create':'Update'}}</button>
                             </div>
                         </div>
 
