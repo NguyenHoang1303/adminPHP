@@ -6,10 +6,7 @@
         </div>
     </div>
 @endsection
-
-
 @section('page-content')
-
     <div class="row">
         <div class="col-md-12 col-sm-12 ">
             <div class="x_panel">
@@ -19,59 +16,46 @@
                 </div>
                 <div class="x_content">
                     <br/>
-                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-
+                    <form method="post" action="">
+                        @csrf
                         <div class="item form-group">
-                            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">First Name
-                                <span class="required">*</span>
-                            </label>
+                            <label class="col-form-label col-md-3 col-sm-3 label-align"> Name *</label>
                             <div class="col-md-6 col-sm-6 ">
-                                <input type="text" id="first-name" required="required" class="form-control ">
+                                <input type="text" name="name" required="required" class="form-control ">
                             </div>
                         </div>
 
                         <div class="item form-group">
-                            <label class="col-form-label col-md-3 col-sm-3 label-align" for="last-name">Last Name <span
-                                    class="required">*</span>
-                            </label>
+                            <label class="col-form-label col-md-3 col-sm-3 label-align"> Description *</label>
                             <div class="col-md-6 col-sm-6 ">
-                                <input type="text" id="last-name" name="last-name" required="required"
-                                       class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="item form-group">
-                            <label for="middle-name" class="col-form-label col-md-3 col-sm-3 label-align">Middle Name /
-                                Initial</label>
-                            <div class="col-md-6 col-sm-6 ">
-                                <input id="middle-name" class="form-control" type="text" name="middle-name">
+                                <label>
+                                    <textarea style="width: 100%" name="description" rows="4" cols="50"></textarea>
+                                </label>
                             </div>
                         </div>
 
                         <div class="form-group item">
-                            <label for="middle-name" class="col-form-label col-md-3 col-sm-3 label-align">Checkboxes and
+                            <label class="col-form-label col-md-3 col-sm-3 label-align">Checkboxes and
                                 radios</label>
                             <div class="col-md-6 col-sm-6 ">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value=""> Option one. select more than one options
+                                        <input type="checkbox" value=""> Option one.
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" value=""> Option two. select more than one options
+                                        <input type="checkbox" value=""> Option two.
                                     </label>
                                 </div>
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" checked="" value="option1" id="optionsRadios1"
-                                               name="optionsRadios"> Option one. only select one option
+                                        <input type="radio" checked="" value="option1" name="optionsRadios"> Option one
                                     </label>
                                 </div>
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" value="option2" id="optionsRadios2" name="optionsRadios">
-                                        Option two. only select one option
+                                        <input type="radio" value="option2" name="optionsRadios"> Option two
                                     </label>
                                 </div>
                             </div>
@@ -81,15 +65,16 @@
                             <label class="col-form-label col-md-3 col-sm-3 label-align">Gender</label>
                             <div class="col-md-6 col-sm-6 col-form-label">
                                 <div class="checkbox ">
-                                    <label>
-                                       Male:<input type="radio" class="flat" name="gender" id="genderM" value="M" checked=""
-                                               required/>
+                                    <label class="mr-2">
+                                        Male:  <input type="radio" class="flat" name="gender"  value="1"
+                                                    checked=""
+                                                    required/>
                                     </label>
-                                    <label>
-                                        Female:<input type="radio" class="flat" name="gender" id="genderF" value="F"/>
+                                    <label class="mr-2">
+                                        Female:  <input type="radio" class="flat" name="gender" value="0"/>
                                     </label>
-                                    <label>
-                                        Other:<input type="radio" class="flat" name="gender" id="genderO" value="O"/>
+                                    <label class="mr-2">
+                                        Other:  <input type="radio" class="flat" name="gender" value="2"/>
                                     </label>
                                 </div>
                             </div>
@@ -109,28 +94,14 @@
                         </div>
 
                         <div class="item form-group">
-                            <label class="col-form-label col-md-3 col-sm-3 label-align">Date Of Birth <span
-                                    class="required">*</span>
-                            </label>
+                            <label class="col-form-label col-md-3 col-sm-3 label-align">Date Of Birth *</label>
                             <div class="col-md-6 col-sm-6 ">
-                                <input id="birthday" class="date-picker form-control" placeholder="dd-mm-yyyy"
-                                       type="text" required="required" type="text" onfocus="this.type='date'"
-                                       onmouseover="this.type='date'" onclick="this.type='date'"
-                                       onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
-                                <script>
-                                    function timeFunctionLong(input) {
-                                        setTimeout(function () {
-                                            input.type = 'text';
-                                        }, 60000);
-                                    }
-                                </script>
+                                <input type="date" class="form-control" placeholder="dd-mm-yyyy" required="required">
                             </div>
                         </div>
 
                         <div class="item form-group">
-                            <label class="col-form-label col-md-3 col-sm-3 label-align">Article content <span
-                                    class="required">*</span>
-                            </label>
+                            <label class="col-form-label col-md-3 col-sm-3 label-align">Article content *</label>
                             <div class="col-md-6 col-sm-6">
                                 <div class="x_content">
                                     <div id="alerts"></div>

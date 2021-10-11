@@ -1,3 +1,11 @@
+<?php
+$admin = array();
+if (Session::has('loginId'))
+{
+    $admin = DB::table('admins')->find(Session::get('loginId'));
+}
+?>
+
 <div class="top_nav">
     <div class="nav_menu">
         <div class="nav toggle">
@@ -7,11 +15,16 @@
             <ul class=" navbar-right">
                 <li class="nav-item dropdown open" style="padding-left: 15px;">
                     <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
-                        <img src="/images/jjjj.jpg" alt="">Admin
+                        <img src="/images/jjjj.jpg" alt="">
+                        @if($admin != null && ($admin->fullname) != null)
+                            {{$admin->fullname}}
+                        @else
+                            Admin
+                        @endif
                     </a>
                     <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item"  href="javascript:;"> Profile</a>
-                        <a class="dropdown-item"  href="/login"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+                        <a class="dropdown-item"  href="{{route('admin.logOut')}}"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
                     </div>
                 </li>
             </ul>

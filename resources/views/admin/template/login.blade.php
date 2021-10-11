@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     @include('admin.include.head')
-    <link href="/css/loginAndRegister.css" rel="stylesheet">
 </head>
 
 <body class="login">

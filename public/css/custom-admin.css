@@ -1,3 +1,68 @@
-.text-pagination{
+.text-pagination {
     color: #00b9f5;
 }
+
+.error {
+    color: red;
+}
+
+.success {
+    color: #00A000;
+    background-color: rgba(0, 255, 0, 0.18);
+    opacity: 0.5;
+}
+
+.hover-pointer {
+    cursor: pointer;
+}
+
+/*========================================================*/
+/* Tool tip Action in table () */
+.tooltip-bottom {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-bottom .tooltip-text {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.tooltip-bottom:hover .tooltip-text {
+    visibility: visible;
+}
+
+/*========================================================*/
+/*Category Information Modal*/
+
+#modal-body-inforCategory div img {
+    padding: .25rem;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: .25rem;
+    max-width: 100%;
+    height: auto;
+    margin-right: .5em;
+    margin-bottom: .5em;
+}
+
+#modal-body-inforCategory div label {
+    color: #000000;
+    font-size: 14px;
+}
+
+#modal-body-inforCategory div p {
+    padding-left: .5em;
+}
+

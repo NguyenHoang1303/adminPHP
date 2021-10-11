@@ -11,7 +11,7 @@
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="/admin" class="site_title"><i class="fa fa-paw"></i> <span>Gentelella Alela!</span></a>
+                    <a href="/admin" class="site_title"><i class="fa fa-paw"></i> <span>Fresh vegetables</span></a>
                 </div>
 
                 <div class="clearfix"></div>
@@ -23,7 +23,19 @@
                     </div>
                     <div class="profile_info">
                         <span>Welcome,</span>
-                        <h2>Admin</h2>
+                        <?php
+                        $admin = array();
+                        if (Session::has('loginId'))
+                            {
+                                $admin = DB::table('admins')->find(Session::get('loginId'));
+                            }
+                        ?>
+                        @if($admin != null && ($admin->fullname) != null)
+                            <h2>{{$admin->fullname}}</h2>
+                        @else
+                            <h2>Admin</h2>
+                        @endif
+
                     </div>
                 </div>
                 <!-- /menu profile quick info -->
