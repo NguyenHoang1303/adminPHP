@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admincontroller;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,10 +18,13 @@ use Illuminate\Support\Facades\Route;
 
 
 //  Example Table, Form, Dashboard
-Route::get('/admin', [Admincontroller::class, 'getDashboard'])->name('admin.dashboard');
-Route::get('/admin/form', [Admincontroller::class, 'getForm']);
-Route::get('/admin/table', [Admincontroller::class, 'getTable']);
-Route::get('/admin/profile', [Admincontroller::class, 'getProfile']);
+Route::prefix('admin')->group(function(){
+    Route::get('/', [Admincontroller::class, 'getDashboard'])->name('admin.dashboard');
+    Route::get('/form', [Admincontroller::class, 'getForm']);
+    Route::get('/table', [Admincontroller::class, 'getTable']);
+    Route::get('/profile', [Admincontroller::class, 'getProfile']);
+});
+
 //==========================================================================================================
 //  Login
 Route::get('/admin/login', [Admincontroller::class, 'getFormLogin'])->name('admin.login');
@@ -33,11 +38,24 @@ Route::get('/admin/register', [Admincontroller::class, 'getFormRegister']);
 Route::post('/admin/register', [Admincontroller::class, 'register']);
 //==========================================================================================================
 //  Category
-Route::get('/admin/category', [Admincontroller::class, 'getCategories'])->name('admin.categories');
-Route::get('/admin/category/form', [Admincontroller::class, 'getFormCategory']);
-Route::post('/admin/category/form', [Admincontroller::class, 'createCategory'])->name('admin.createCategory');
-Route::get('/admin/category/delete/{id}', [Admincontroller::class, 'deleteCategory']);
-Route::get('/admin/category/update/{id}', [Admincontroller::class, 'getInformationCategory']);
-Route::post('/admin/category/update', [Admincontroller::class, 'updateInformationCategory'])->name('admin.updateCategory');
-Route::get('/admin/category/search', [Admincontroller::class, 'searchCategory'])->name('admin.searchCategory');
+Route::prefix('/admin/category')->group(function (){
+    Route::get('/', [CategoryController::class, 'getCategories'])->name('categories');
+    Route::get('/form', [CategoryController::class, 'getForm']);
+    Route::post('/form', [CategoryController::class, 'create'])->name('createCategory');
+    Route::get('/delete/{id}', [CategoryController::class, 'delete']);
+    Route::get('/update/{id}', [CategoryController::class, 'getInformation']);
+    Route::post('/update', [CategoryController::class, 'update'])->name('updateCategory');
+    Route::get('/search', [CategoryController::class, 'search'])->name('searchByNameCategory');
+});
+//==========================================================================================================
+//  Product
+Route::prefix('/admin/product')->group(function (){
+    Route::get('/', [ProductController::class, 'getProducts'])->name('products');
+    Route::get('/form', [ProductController::class, 'getForm']);
+    Route::post('/form/create', [ProductController::class, 'create'])->name('createProduct');
+    Route::get('/update/{id}', [ProductController::class, 'getInformation']);
+    Route::post('/update', [ProductController::class, 'update'])->name('updateProduct');
+    Route::get('/delete/{id}', [ProductController::class, 'delete']);
+    Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
+});
 

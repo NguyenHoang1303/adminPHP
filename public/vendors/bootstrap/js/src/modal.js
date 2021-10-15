@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.3.1): modal.js
+ * Bootstrap (v4.3.1): manager-page.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -414,7 +414,7 @@ class Modal {
 
   // ----------------------------------------------------------------------
   // the following methods are used to handle overflowing modals
-  // todo (fat): these should probably be refactored out of modal.js
+  // todo (fat): these should probably be refactored out of manager-page.js
   // ----------------------------------------------------------------------
 
   _adjustDialog() {

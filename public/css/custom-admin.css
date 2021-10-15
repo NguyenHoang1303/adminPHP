@@ -16,8 +16,8 @@
     cursor: pointer;
 }
 
-/*========================================================*/
-/* Tool tip Action in table () */
+/*====================================================================================================================*/
+/*================================= Tool tip Action in table =========================================================*/
 .tooltip-bottom {
     position: relative;
     display: inline-block;
@@ -43,10 +43,9 @@
     visibility: visible;
 }
 
-/*========================================================*/
-/*Category Information Modal*/
-
-#modal-body-inforCategory div img {
+/*====================================================================================================================*/
+/*============================== Information Modal Manager-page =======================================================*/
+#modal-body-information div img {
     padding: .25rem;
     background-color: #fff;
     border: 1px solid #dee2e6;
@@ -57,12 +56,31 @@
     margin-bottom: .5em;
 }
 
-#modal-body-inforCategory div label {
+#modal-body-information div label {
     color: #000000;
     font-size: 14px;
 }
 
-#modal-body-inforCategory div p {
-    padding-left: .5em;
+/*====================================================================================================================*/
+/*================================ Input search Manager-page ==========================================================*/
+#input-search {
+    position: relative;
 }
 
+#delete-search {
+    position: absolute;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    right: 2px;
+    top: 8px;
+}
+
+/*====================================================================================================================*/
+/*======================================= Sort select Manager-page====================================================*/
+#select-sort {
+    border-radius: 20px;
+}
+#select-category {
+    border-radius: 20px;
+}

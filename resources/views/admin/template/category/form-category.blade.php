@@ -21,7 +21,7 @@
                 <div class="x_content">
                     <br/>
                     <form name="formCategory" method="post"
-                          action="{{!isset($item) ? route('admin.createCategory') : route('admin.updateCategory')}}">
+                          action="{{!isset($item) ? route('createCategory') : route('updateCategory')}}">
                         @csrf
                         @if(isset($item))
                             <input type="hidden" name="id" value="{{$item->id}}">
@@ -66,9 +66,10 @@
                         <div class="ln_solid"></div>
                         <div class="item form-group">
                             <div class="col-md-6 col-sm-6 offset-md-3">
-                                <a class="btn btn-primary" style="color: white" href="{{route('admin.categories')}}">Cancel</a>
+                                <a class="btn btn-primary" style="color: white" href="{{route('categories')}}">Cancel</a>
                                 <button class="btn btn-primary" id="reset" type="reset">Reset</button>
-                                <button class="btn btn-success">{{!isset($item) ? 'Create':'Update'}}</button>
+                                <button class="btn btn-success" id="{{!isset($item) ? 'create':'update'}}">
+                                    Submit</button>
                             </div>
                         </div>
 
@@ -80,5 +81,5 @@
 @endsection
 @section('page-script')
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
-    <script src="/js/category-form.js"></script>
+    <script src="/js/form-admin.js"></script>
 @endsection

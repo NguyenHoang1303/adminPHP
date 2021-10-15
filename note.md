@@ -6,8 +6,8 @@
 4. composer -> install laravel
    `composer global require laravel/installer`
 5. Tạo project laravel.
-   - Chuột phải -> Git bash here tại thư mục muốn tạo project.
-   `laravel new ten-cua-project`
+    - Chuột phải -> Git bash here tại thư mục muốn tạo project.
+      `laravel new ten-cua-project`
 
 ###Editor
 
@@ -184,3 +184,276 @@
         - Lưu ý là đường link sẽ tính bắt đầu từ public.
         - Không cần import namespace đầy đủ của lớp URL.
         - Khi copy template về thì phải sửa lại phần lớn link này.
+###Làm việc với database.
+- Mở xampp, mở mysql và apache.
+- Cấu hình kết nối dabase trong file `.env`
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=t2009a_hello_laravel
+DB_USERNAME=root
+DB_PASSWORD=
+
+- Tạo model để mapping với các bảng trong database.
+- Tạo migration: `php artisan make:migration file_name`. (Update database)
+- Trong đó, việc đặt file name nên tuân theo convention như sau.
+- Tạo mới bảng: `php artisan make:migration create_tableName_table`.
+- Thêm mới cột vào bảng: `php artisan make:migration add_columnName_to_tablename_table`.
+- Thay đổi cột (tên, kiểu dữ liệu): `php artisan make:migration update_columnName_to_tablename_table`.
+- Xoá cột: `php artisan make:migration remove_columnName_from_tablename_table`.
+- Xoá bảng: `php artisan make:migration drop_tableName_table`.
+- Chạy lệnh `php artisan migrate`.
+  Câu lệnh tạo model kèm file migration (trong thư mục `database/migrations`): `php artisan make:model Product --migration`
+- Thực hiện udpate vào database. `php artisan migrate` `php artisan migrate:refresh` (xoá các bảng và tạo mới lại.).
+- Lỗi `key too long` thì vào file `app/Providers/AppServiceProvider.php` trong hàm `boot`,
+  thêm dòng `Schema::defaultStringLength(191);`, cần bổ sung `use Illuminate\Support\Facades\Schema;` đầu file.
+- Lỗi báo bảng tồn tại, nếu đang trong `quá trình phát triển` thì có thể fix đơn giản tất cả bảng
+  trong database và chạy lại lệnh.
+- Khi có thay đổi tên trường, thêm trường hoặc kiểu dữ liệu của trường thì sau khi sửa trong
+  file migrate chạy `php artisan migrate:refresh` hoặc `php artisan migrate:fresh`
+
+###Migration dữ liệu vào database.
+- Là quá trình khai báo và update kiểu dữ liệu các bảng từ code sang database.
+- `$table->increments('id');` tạo trường id tự tăng.
+- `$table->integer('price');` tạo trường price kiểu int.
+- `$table->string('name');` tạo trường name kiểu string.
+- `$table->integer('status')->default(1);` tạo trường status kiểu int có giá trị default 1.
+- `$table->integer('categoryId')->unsigned();` khai báo trường categoryId kiểu int nhưng phải là số dương.
+  `$table->foreign('categoryId')->references('id')->on('categories');`
+  tạo ra một khoá ngoại trên bảng tại trường `categoryId` và có khoá chính là trường tên là `id`
+  nhưng trên bảng `categories`
+  thường đi thành một cặp để khai báo khoá ngoại.
+- `$table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));` tạo trường `created_at` kiểu
+  timestamp và lấy giá trị mặc định thời gian hiện tại.
+- Khi tạo khoá ngoại, ví dụ từ bảng `products` sang bảng `categories` thì phải tạo bảng
+  `categories`, trong trường hợp sinh ra migrate của bảng product trước thì sửa nội dung ngày tháng
+  để bảng `categories` có thể được tạo trước (trick) `2021_06_28_083424_create_products_table.php` sang
+  `2021_06_28_083400_create_products_table.php`
+- ###Seeder trong laravel.
+- Là quá trình tạo ra dữ liệu mẫu, phù hợp, đầy đủ cho project.
+- Đảm bảo quá trình demo sẽ thể hiện sự chuyên nghiệp của sản phẩm cũng như
+  có thể demo được những chức năng khó, đòi hỏi dữ liệu nhiều.
+- Dễ dàng backup và khởi tạo lại dữ liệu, phục vụ quá trình test.
+- Lệnh tạo `php artisan make:seeder TenSeeder`, tạo ra một file tên `TenSeeder` trong thư mục
+  `database/seeders`. Lưu ý `TenSeeder` tương ứng với các bảng như `ProductSeeder`, `CategorySeeder`. Tên này với đuôi Seeder có thể thay đổi được,
+  nhưng phải đảm bảo đồng bộ giữa các file. Mỗi một bảng cần có một file Seeder riêng biệt, không nên viết chung.
+- Các seeder nên sử dụng các dòng sau để tránh các vấn đề về khoá ngoại, và đảm bảo dữ liệu mới được sinh lại từ đầu.
+    - `\Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS = 0');` thực hiện trước khi
+      chạy seeder để đảm bảo quá trình insert update, không bị ảnh hưởng bởi khoá ngoại, thường dùng đầu file.
+    - `\Illuminate\Support\Facades\DB::table('categories')->truncate();` thực hiện xoá hoàn toàn dữ liệu trong bảng
+      nhưng không xoá bảng, nó reset id count về giá trị ban đầu là 0.
+    - `\Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS = 1');`  mở lại quá trình check, thường dùng cuối file
+- Quá trình insert nên thức hiện theo mảng. Nền kèm id (kể cả tự tăng) để đảm bảo matching với khoá ngoại ở bảng khác.
+
+
+        \Illuminate\Support\Facades\DB::table('categories')->insert([
+            [
+                'name' => 'Lipstick',
+                'images' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR81NLdW06WdMGkj160-JKrFThFXCYqSyShd85PTd4uRDpEnmHw',
+                'description' => 'Lipstick is a cosmetic product containing pigments, oils-v, waxes, and emollients that apply color, texture, and protection to the lips.'
+            ],
+            [
+                'name' => 'Lip Gloss',
+                'images' => 'https://media.loveitopcdn.com/6458/kcfinder/upload//images/cach-lam-son-bong-handmade-cho%20moi-cang-mong.jpg',
+                'description' => 'Lip gloss is a product used primarily to give lips a glossy lustre, and sometimes to add a subtle color. It is distributed as a liquid or a soft solid (not to be confused with lip balm, which generally has medical or soothing purposes) or lipstick, which generally is a solid, cream like substance that gives off a more pigmented color',
+            ]
+        ]);
+- Nên insert thêm ngày tháng để phục vụ test.
+    - Trong quá trình migrate sẽ có đoạn `$table->timestamps()` tự động thêm 2 trường `created_at`, `updated_at`.
+    - Khi tạo seeder có thể trực tiếp thêm theo các cách sau.
+        - `'created_at' => '1990-01-20'` đưa ngày tháng vào theo dạng chuỗi có định dạng `yyyy-MM-dd`.
+        - `'created_at' => \Illuminate\Support\Carbon::now()` lấy theo đúng thời gian hiện tại khi chạy seed.
+        - `'created_at' => \Illuminate\Support\Carbon::now()->addDays(-1)` lấy theo đúng thời gian hiện tại khi chạy seed, cộng thêm 1 ngày.
+    - Việc tạo ngày tháng theo khoảng thời gian hiện tại đặc biệt quan trọng trong việc tạo dữ liệu thống kê, ví dụ:
+      biểu đồ doanh thu theo thời gian, thị phần của sản phẩm...
+- Tổng kết, file seeder sẽ gần như sau.
+
+      \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+      \Illuminate\Support\Facades\DB::table('categories')->truncate();
+      \Illuminate\Support\Facades\DB::table('categories')->insert([
+          [
+              'name' => 'Lipstick',
+              'images' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR81NLdW06WdMGkj160-JKrFThFXCYqSyShd85PTd4uRDpEnmHw',
+              'description' => 'Lipstick is a cosmetic product containing pigments, oils-v, waxes, and emollients that apply color, texture, and protection to the lips.'
+          ],
+          [
+              'name' => 'Lip Gloss',
+              'images' => 'https://media.loveitopcdn.com/6458/kcfinder/upload//images/cach-lam-son-bong-handmade-cho%20moi-cang-mong.jpg',
+              'description' => 'Lip gloss is a product used primarily to give lips a glossy lustre, and sometimes to add a subtle color. It is distributed as a liquid or a soft solid (not to be confused with lip balm, which generally has medical or soothing purposes) or lipstick, which generally is a solid, cream like substance that gives off a more pigmented color',
+          ]
+      ]);
+      \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+- Trong file DatabaseSeeder hàm `run` thêm các đoạn gọi đến Seeder con để khi gọi db:seed sẽ chạy toàn bộ mà không cần gọi cụ thể từng file.
+    - `$this->call(CategorySeeder::class);`
+    - `$this->call(CustomerSeeder::class);`
+- Chạy dbseed bằng lệnh (lựa chọn 1):
+    - `php artisan db:seed` đơn thuần chạy lại file DatabaseSeeder.php
+    - `php artisan db:seed --class=UserSeeder` chạy lại file UserSeeder
+    - `php artisan migrate:fresh --seed` vừa thực hiện reset hard database (xoá toàn bộ database cũ, migrate lại) và chạy file DatabaseSeeder.
+    - ###Phân trang và customize phân trang.
+- Sử dụng phân trang mặc định.
+    - Trong phần controller khi lấy dữ liệu ra thay vì sử dụng `Model::all()`
+      thì chúng ta chuyển thành `Model::paginate(10)` trong đó 10 là số phần tử cho một trang.
+      Ví dụ `Product::paginate(10)`
+
+              return view('list-product', ['list'=> Product::paginate(10)]);
+
+    - Trong phần view. Sử dụng cú pháp `{!! $list->links() !!}` để hiển thị các trang một cách mặc định.
+      Lưu ý phần `$list` là tên biến được truyền từ controller.
+
+              {!! $list->links() !!}
+
+- Customize phân trang (khi thật sự hiểu cách phân trang có thể làm khác).
+    - Tạo view riêng dành cho phân trang: tạo thư mục `pagination` trong `resources/views`, tạo file `default.blade.php`.
+    - C1. Copy nội dung sau đưa vào file `default.blade.php`.
+
+              @if ($paginator->lastPage() > 1)
+                  <ul class="pagination">
+                      <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
+                          <a href="{{ $paginator->url(1) }}">Previous</a>
+                      </li>
+                      @for ($i = 1; $i <= $paginator->lastPage(); $i++)
+                          <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
+                              <a href="{{ $paginator->url($i) }}">{{ $i }}</a>
+                          </li>
+                      @endfor
+                      <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
+                          <a href="{{ $paginator->url($paginator->currentPage()+1) }}" >Next</a>
+                      </li>
+                  </ul>
+              @endif
+    - C2. Chi tiết hơn. Copy nội dung sau đưa vào file `default.blade.php`.
+
+              <?php
+              // config
+              $link_limit = 7; // maximum number of links (a little bit inaccurate, but will be ok for now)
+              ?>
+              
+              @if ($paginator->lastPage() > 1)
+                  <ul class="pagination">
+                      <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
+                          <a href="{{ $paginator->url(1) }}">First</a>
+                      </li>
+                      @if($paginator->currentPage() > 1)
+                          <li>
+                              <a href="{{ $paginator->url($paginator->currentPage() - 1) }}">Previous</a>
+                          </li>
+                      @endif
+                      @for ($i = 1; $i <= $paginator->lastPage(); $i++)
+                          <?php
+                          $half_total_links = floor($link_limit / 2);
+                          $from = $paginator->currentPage() - $half_total_links;
+                          $to = $paginator->currentPage() + $half_total_links;
+                          if ($paginator->currentPage() < $half_total_links) {
+                              $to += $half_total_links - $paginator->currentPage();
+                          }
+                          if ($paginator->lastPage() - $paginator->currentPage() < $half_total_links) {
+                              $from -= $half_total_links - ($paginator->lastPage() - $paginator->currentPage()) - 1;
+                          }
+                          ?>
+                          @if ($from < $i && $i < $to)
+                              <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
+                                  <a href="{{ $paginator->url($i) }}">{{ $i }}</a>
+                              </li>
+                          @endif
+                      @endfor
+                      @if($paginator->currentPage() < $paginator->lastPage())
+                          <li>
+                              <a href="{{ $paginator->url($paginator->currentPage() + 1) }}">Next</a>
+                          </li>
+                      @endif
+                      <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
+                          <a href="{{ $paginator->url($paginator->lastPage()) }}">Last</a>
+                      </li>
+                  </ul>
+              @endif
+    - Trong file danh sách thay vì
+
+          {!! $list->links() !!}
+
+      thì chuyển thành
+
+          @include('pagination.default', ['paginator' => $list])
+    - Lưu ý một số tên biến cần biết khi customize thêm.
+        - `$paginator` là tên biến được truyền vào tại dùng @include.
+        - `$paginator->lastPage()` là page cuối cùng.
+        - `$paginator->currentPage()` là page hiện tại.
+        - `$paginator->url(3)` sẽ hiện thị ra link cho trang thứ 3.
+
+###Validate dữ liệu.
+- Sử dụng jquery validation `https://jqueryvalidation.org/documentation/` hoặc javascript. Xem lại kỳ 1.
+- Validate trong database sử dụng các rằng buộc, trigger, store procedure (sql server, mysql).
+- Sử dụng ngôn ngữ code backend để  validate. Với php laravel thì sẽ tiến hành theo link `https://laravel.com/docs/8.x/validation`
+    - Cách 1. Validate tại controller.
+
+            $request->validate(
+                    [
+                        'name' => 'required|min:10|max:15',
+                        'price' => 'required'
+                    ],
+                    [
+                        'name.required' => 'Vui lòng nhập tên.',
+                        'name.min' => 'Tên phải lớn hơn 10 ký tự.',
+                        'name.max' => 'Tên phải nhỏ hơn 15 ký tự.',
+                    ]
+              );
+
+    - Cách 2. Validate tại `FormRequest` riêng biệt.
+        - Tạo form request với câu lệnh sau.
+
+              php artisan make:request StoreProductRequest
+        - Trong hàm store của controller, chuyển tham số từ `Request $request` thành `StoreProductRequest $request`.
+          Cụ thể, chuyển từ
+
+              public function store(Request $request)
+          Thành
+
+              public function store(StoreProductRequest $request)
+        - Trong `StoreProductRequest` khai báo rules cũng như message. `authorize()` return true.
+
+              public function rules()
+              {
+                  return [
+                      'title' => 'required|unique:posts|max:255',
+                      'body' => 'required',
+                  ];
+              }
+
+              public function messages()
+              {
+                  return [
+                      'name.required' => 'Vui lòng nhập tên.',
+                      'name.min' => 'Tên phải lớn hơn 10 ký tự.',
+                      'name.max' => 'Tên phải nhỏ hơn 15 ký tự.',
+                      'price.required' => 'Vui lòng nhập giá.'
+                  ];
+              }
+
+              // validate theo business riêng.
+              public function withValidator($validator)
+              {
+                  $validator->after(function ($validator) {
+                      if($this->get('name') == 'xuanhung'){
+                          $validator->errors()->add('name', 'Tao không chơi với thằng Hùng.');
+                      }
+                  });
+              }
+
+    - Danh sách validate rules: `https://laravel.com/docs/8.x/validation#available-validation-rules`.
+    - Tại view, hiển thị tổng quan lỗi ở đầu form.
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+    - Tại view, hiển thị lỗi tại từng trường, bên dưới là hiển thị lỗi cho trường `price`
+
+            @error('price')
+                <div class="text-danger">* {{ $message }}</div>
+            @enderror

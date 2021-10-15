@@ -1,32 +1,74 @@
 @extends('admin.master-admin')
+@section('page-css')
+    <style>
+        #input-search {
+            position: relative;
+        }
+
+        #delete-search {
+            position: absolute;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            right: 2px;
+            top: 8px;
+        }
+    </style>
+@endsection
 @section('breadcrumb')
     <div class="page-title">
         <div class="title_left">
-            <h3>Admin | Categories Page</h3>
+            <h3>Admin | Product Page</h3>
         </div>
     </div>
 @endsection
 @section('page-content')
+
     <div class="row">
         <div class="col-md-12 col-sm-12 ">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2 class="col-sm-3 col-md-3">Category Manager</h2>
+                    <h2 class="col-sm-2 col-md-2">Product Manager</h2>
                     <div class="col-sm-9 col-md-9">
-                        <form action="{{route('searchByNameCategory')}}" method="get">
+                        <form action="{{route('searchProduct')}}" method="get">
                             <div class="navbar-right">
-                                <div class="col-md-5 col-sm-5 form-group top_search">
+                                <div class="col-md-4 col-sm-4 form-group top_search pr-2">
                                     <select name="sort" class="form-control" id="select-sort">
-                                        <option disabled selected>---Select option---</option>
-                                        <option value="nameAsc" {{isset($sort) && $sort == 'nameAsc'? 'selected' : ''}}>Sort by name a-z</option>
-                                        <option value="nameDesc" {{isset($sort) && $sort == 'nameDesc'? 'selected' : ''}}>Sort by name z-a</option>
+
+                                        <option value="-1"  selected>---Select option---</option>
+                                        <option value="nameAsc" {{isset($sort) && $sort == 'nameAsc'? 'selected' : ''}}>
+                                            Sort by name a-z
+                                        </option>
+                                        <option
+                                            value="nameDesc" {{isset($sort) && $sort == 'nameDesc'? 'selected' : ''}}>
+                                            Sort by name z-a
+                                        </option>
+                                        <option
+                                            value="priceAsc" {{isset($sort) && $sort == 'priceAsc'? 'selected' : ''}}>
+                                            Sort by price low to height
+                                        </option>
+                                        <option
+                                            value="priceDesc" {{isset($sort) && $sort == 'priceDesc'? 'selected' : ''}}>
+                                            Sort by price height to low
+                                        </option>
+
                                     </select>
                                 </div>
 
-                                <div class="col-md-2 col-sm-2 form-group pull-right top_search">
+                                <div class="col-md-4 col-sm-4 form-group pull-right top_search pr-2">
+                                    <select name="category" class="form-control" id="select-category">
+                                        <option selected value="-1">---Select category---</option>
+                                        @foreach($categories as $cate )
+                                            <option
+                                                value="{{$cate->id}}" {{isset($category) && $category == $cate->id? 'selected' : ''}}>
+                                                {{$cate->name}}
+                                            </option>
+
+                                        @endforeach
+                                    </select>
                                 </div>
 
-                                <div class="col-md-5 col-sm-5 form-group pull-right top_search">
+                                <div class="col-md-4 col-sm-4 form-group pull-right top_search">
                                     <div class="input-group">
                                         <div id="input-search">
                                             <input id="query" type="text" class="form-control"
@@ -42,7 +84,6 @@
                             </div>
                         </form>
                     </div>
-
                     @if(session()->has('fail'))
                         <div style="width: 100%; display: flex; justify-content: center">
                             <p style="margin: 0; font-size: 16px; color: red">{{session()->get('fail')}}</p>
@@ -63,7 +104,6 @@
 
                     <div class="clearfix"></div>
                 </div>
-
                 <div class="x_content">
                     <div class="row">
                         <div class="col-sm-12">
@@ -74,11 +114,13 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Image</th>
-                                            <th style="width:40%;">Description</th>
-                                            <th>Status</th>
+                                            <th style="width:35%;">Description</th>
+                                            <th style="width:8%;">Price <small>(vnđ)</small></th>
+                                            <th>Category</th>
+                                            <th style="width:2%">Status</th>
                                             <th>CreateAt</th>
                                             <th>UpdateAt</th>
-                                            <th>Action</th>
+                                            <th style="width: 7%">Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -89,11 +131,13 @@
                                                          alt="">
                                                 </td>
                                                 <td>{{$item->description}}</td>
+                                                <td>{{number_format($item->price, 2, ',', ' ')}}</td>
+                                                <td>{{$item->categoryId}}</td>
                                                 <td>
                                                     @if($item->status == 1)
-                                                        unlock
-                                                    @elseif($item->status == 2)
-                                                        lock
+                                                        Còn hàng
+                                                    @elseif($item->status == 0)
+                                                        hết hàng
                                                     @else
                                                         deleted
                                                     @endif
@@ -102,21 +146,24 @@
                                                 <td>{{$item->updated_at}}</td>
                                                 <td style="font-size: 14px; color: #0000c1;">
                                                     <div class="tooltip-bottom">
-                                                    <span id="information" class="hover-pointer dataItem"
+                                                    <span class="hover-pointer dataItem"
                                                           data-toggle="modal"
                                                           data-target="#informationModal"
                                                           data-created_at="{{$item->created_at}}"
+                                                          data-category_id="{{$item->categoryId}}"
                                                           data-updated_at="{{$item->updated_at}}"
-                                                          data-status="{{$item->status}}"
                                                           data-description="{{$item->description}}"
                                                           data-thumbnail="{{$item->thumbnail}}"
                                                           data-name="{{$item->name}}"
+                                                          data-detail="{{$item->detail}}"
+                                                          data-price="{{"$item->price"}}"
+                                                          data-status="{{$item->status}}"
                                                           data-id="{{$item->id}}">
                                                         <i class="fa fa-info mr-1 text-primary"></i></span>
                                                         <span class="tooltip-text">Information</span>
                                                     </div>
                                                     <div class="tooltip-bottom">
-                                                        <a href="/admin/category/update/{{$item->id}}"
+                                                        <a href="/admin/product/update/{{$item->id}}"
                                                            class="hover-pointer">
                                                             <i class="fa fa-edit mr-1 text-primary"></i></a>
                                                         <span class="tooltip-text">Edit</span>
@@ -159,18 +206,22 @@
         </div>
     </div>
     {{------------------------------------------------------------Modal Delete------------------------------------------------------}}
-    @include('admin.include.modalDelete',['url'=> 'category'])
+    @includeIf('admin.include.modalDelete',['url'=> 'product'])
     {{------------------------------------------------------------Modal Delete------------------------------------------------------}}
     {{------------------------------------------------------------Modal Information------------------------------------------------------}}
     <?php
     $lisFieldModal = [
+        'categoryId' => "categoryId",
+        'detail' => 'detail',
+        'price' => 'price',
         'thumbnail' => 'thumbnail',
         'status' => 'status',
     ];
     ?>
-    @include('admin.include.modalInformation',$lisFieldModal)
+    @includeIf('admin.include.modalInformation',$lisFieldModal)
     {{------------------------------------------------------------Modal Information------------------------------------------------------}}
 @endsection
 @section('page-script')
     <script src="/js/manager-page.js"></script>
 @endsection
+

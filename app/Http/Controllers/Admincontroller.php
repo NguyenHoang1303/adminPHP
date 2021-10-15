@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\admin\CategoryRequest;
 use App\Http\Requests\admin\LoginRequest;
 use App\Http\Requests\admin\RegisterRequest;
 use App\Models\Admin;
-use App\Models\Category;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -16,7 +13,7 @@ class Admincontroller extends Controller
 {
     public function getFormLogin()
     {
-        return view("admin.template.login");
+        return view('admin.template.login');
     }
 
     public function login(LoginRequest $request)
@@ -102,100 +99,4 @@ class Admincontroller extends Controller
         return view('admin.template.profile', ['data' => $admin]);
     }
 //==========================================================================================
-//CATEGORY Handler
-
-    function getCategories()
-    {
-        $paginate = 1;
-        $categories = DB::table('categories');
-        $sumRecord = $categories->count();
-        $data = $categories->paginate($paginate);
-        return view('admin.template.category.categories', [
-            'data' => $data,
-            'sumRecord'=> $sumRecord,
-            'paginate'=> $paginate
-        ]);
-    }
-
-    function getFormCategory()
-    {
-        return view('admin.template.category.form-category');
-    }
-
-    function createCategory(CategoryRequest $req)
-    {
-        $existName = DB::table('categories')->where('name', $req->input('name'))->exists();
-        if ($existName) {
-            return redirect()
-                ->back()
-                ->with('nameExist', 'Name Exists')
-                ->withInput();
-        }
-        $category = new Category();
-        $category->name = $req->get('name');
-        $category->description = $req->get('description');
-        $category->thumbnail = $req->get('thumbnail');
-        $category->status = 1;
-        $category->save();
-        return redirect()
-            ->back()
-            ->with('success', 'Successfully created a new account!');
-    }
-
-    function deleteCategory($id)
-    {
-        $category = DB::table('categories')->where('id', $id);
-        if (!$category->exists()) {
-            return redirect()
-                ->back()
-                ->with('fail', 'Error! An error occurred. Please try again later. Please try again');
-        }
-        $category->update(['status' => 0]);
-        return redirect()
-            ->back()
-            ->with('deleteSuccess', "Delete success!");
-    }
-
-    function getInformationCategory($id)
-    {
-        $category = DB::table('categories')->where('id', $id);
-        if (!$category->exists()) {
-            return redirect()
-                ->back()
-                ->with('fail', 'Error! An error occurred. Please try again later. Please try again');
-        }
-        return view('admin.template.category.form-category', ['item' => $category->first()]);
-    }
-
-    function updateInformationCategory(CategoryRequest $req)
-    {
-        date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $category = DB::table('categories')->where('id', $req->get('id'));
-        $category->update([
-            'name' => $req->get('name'),
-            'description' => $req->get('description'),
-            'thumbnail' => $req->get('thumbnail'),
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
-        return redirect('/admin/category')
-            ->with('successUpdate', 'Successfully created a new account!');
-    }
-
-    function searchCategory(Request $request)
-    {
-        $name = $request->get('nameQuery');
-        if (isset($name)) {
-            $categories = DB::table('categories')->where('name', 'LIKE', "%${name}%")->get();
-            if (isset($categories)) {
-                return view('admin.template.category.categories', [
-                    'data' => $categories,
-                    'oldQuery' => $name
-                ]);
-            } else {
-                return view('admin.template.category.categories')
-                    ->with('search', 'Not fount');
-            }
-        }
-        return redirect('/admin/category');
-    }
 }

@@ -10,6 +10,10 @@
     <!-- Pagination Elements Here -->
 
         @foreach($elements as $element)
+        <!-- Make three dots -->
+            @if(is_string($element))
+                <li class="disabled"><a class="text-pagination">{{ $element }}</a></li>
+            @endif
 
         <!-- Links Array Here -->
             @if(is_array($element))

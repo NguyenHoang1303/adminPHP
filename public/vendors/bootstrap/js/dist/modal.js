@@ -1,5 +1,5 @@
 /*!
-  * Bootstrap modal.js v4.3.1 (https://getbootstrap.com/)
+  * Bootstrap manager-page.js v4.3.1 (https://getbootstrap.com/)
   * Copyright 2011-2019 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
@@ -465,7 +465,7 @@
       }
     } // ----------------------------------------------------------------------
     // the following methods are used to handle overflowing modals
-    // todo (fat): these should probably be refactored out of modal.js
+    // todo (fat): these should probably be refactored out of manager-page.js
     // ----------------------------------------------------------------------
     ;
 
@@ -647,4 +647,4 @@
   return Modal;
 
 }));
-//# sourceMappingURL=modal.js.map
+//# sourceMappingURL=manager-page.js.map

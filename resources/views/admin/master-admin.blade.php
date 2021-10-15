@@ -51,7 +51,7 @@
     <!-- /top navigation -->
 
         <!-- page content -->
-        <div class="right_col" role="main">
+        <div class="right_col">
             <div class="">
                 @yield('breadcrumb')
                 <div class="clearfix"></div>
