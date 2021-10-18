@@ -172,5 +172,5 @@
     {{------------------------------------------------------------Modal Information------------------------------------------------------}}
 @endsection
 @section('page-script')
-    <script src="/js/manager-page.js"></script>
+    <script src="/admin/js/manager-page.js"></script>
 @endsection

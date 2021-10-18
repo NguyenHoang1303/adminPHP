@@ -15,7 +15,7 @@ class ProductController extends Controller
 
     function getProducts()
     {
-        $paginate = 1;
+        $paginate = 6;
         $sumRecord = DB::table('products')->count();
         $categories = DB::table('categories')->get();
         $data = DB::table('products')
@@ -97,7 +97,7 @@ class ProductController extends Controller
 
     function search(Request $request)
     {
-        $paginate = 10;
+        $paginate = 6;
         $name = $request->get('query');
         $sort = $request->get('sort');
         $category = $request->get('category');

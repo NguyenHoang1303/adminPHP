@@ -171,7 +171,7 @@
 @section('page-script')
     <script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script>
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
-    <script src="/js/form-admin.js"></script>
+    <script src="/admin/js/form-admin.js"></script>
     <script>
         ClassicEditor
             .create(document.querySelector('#editor'))

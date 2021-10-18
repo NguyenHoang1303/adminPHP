@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admincontroller;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\user\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,7 +26,7 @@ Route::prefix('admin')->group(function(){
     Route::get('/profile', [Admincontroller::class, 'getProfile']);
 });
 
-//==========================================================================================================
+//============================================ Admin ==============================================================
 //  Login
 Route::get('/admin/login', [Admincontroller::class, 'getFormLogin'])->name('admin.login');
 Route::post('/admin/login', [Admincontroller::class, 'login']);
@@ -59,3 +60,5 @@ Route::prefix('/admin/product')->group(function (){
     Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
 });
 
+//============================================ User ==============================================================
+Route::get('/home',[HomeController::class,'getViewHome']);
