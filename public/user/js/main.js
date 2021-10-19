@@ -340,14 +340,14 @@
 
     /*==================================================================
     [ Counter up ]*/
-    try {
-        $('.counter').counterUp({
-            delay: 10,
-            time: 1000
-        });
-    } catch (er) {
-        console.log(er);
-    }
+    // try {
+    //     $('.counter').counterUp({
+    //         delay: 10,
+    //         time: 1000
+    //     });
+    // } catch (er) {
+    //     console.log(er);
+    // }
 
 
     /*==================================================================
@@ -495,31 +495,31 @@
 
     /*==================================================================
     [ Noui ]*/
-    try {
-        var filterBar = document.getElementById('filter-bar');
-        var fromValue = Number($('#value-lower').html());
-        var toValue = Number($('#value-upper').html());
-
-        noUiSlider.create(filterBar, {
-            start: [fromValue, toValue],
-            connect: true,
-            range: {
-                'min': fromValue,
-                'max': toValue
-            }
-        });
-
-        var skipValues = [
-            document.getElementById('value-lower'),
-            document.getElementById('value-upper')
-        ];
-
-        filterBar.noUiSlider.on('update', function(values, handle) {
-            skipValues[handle].innerHTML = Math.round(values[handle]);
-        });
-    } catch (er) {
-        console.log(er);
-    }
+    // try {
+    //     var filterBar = document.getElementById('filter-bar');
+    //     var fromValue = Number($('#value-lower').html());
+    //     var toValue = Number($('#value-upper').html());
+    //
+    //     noUiSlider.create(filterBar, {
+    //         start: [fromValue, toValue],
+    //         connect: true,
+    //         range: {
+    //             'min': fromValue,
+    //             'max': toValue
+    //         }
+    //     });
+    //
+    //     var skipValues = [
+    //         document.getElementById('value-lower'),
+    //         document.getElementById('value-upper')
+    //     ];
+    //
+    //     filterBar.noUiSlider.on('update', function(values, handle) {
+    //         skipValues[handle].innerHTML = Math.round(values[handle]);
+    //     });
+    // } catch (er) {
+    //     console.log(er);
+    // }
 
 
     /*==================================================================

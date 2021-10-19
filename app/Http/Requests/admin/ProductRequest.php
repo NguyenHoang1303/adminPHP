@@ -32,7 +32,7 @@ class ProductRequest extends FormRequest
             'price' => 'required|numeric|min:0|not_in:0',
             'detail' => 'required',
             'status' => 'required',
-            'categoryId' => 'required',
+            'category_id' => 'required',
         ];
     }
     public function messages()
@@ -41,7 +41,7 @@ class ProductRequest extends FormRequest
             'name.required'=>"Username cannot be blank",
             'description.required'=>"Password cannot be blank",
             'thumbnail.required'=>"Thumbnail cannot be blank",
-            'categoryId.required'=>"Category cannot be blank",
+            'category_id.required'=>"Category cannot be blank",
             'detail.required'=>"Detail cannot be blank",
             'status.required'=>"Status cannot be blank",
             'price.numeric'=>"Ticket must be number",

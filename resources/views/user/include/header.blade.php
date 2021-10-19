@@ -6,7 +6,7 @@
                 <div class="left-header">
                     <!-- Logo desktop -->
                     <div class="logo">
-                        <a href="index.html"><img src="/user/images/icons/logo-01.png" alt="IMG-LOGO"></a>
+                        <a href="/home"><img src="/user/images/icons/logo-01.png" alt="IMG-LOGO"></a>
                     </div>
                 </div>
 
@@ -19,23 +19,23 @@
                             </li>
 
                             <li>
-                                <a href="#">About</a>
+                                <a href="/about">About</a>
                             </li>
 
                             <li>
-                                <a href="shop-sidebar-grid.html">Shop</a>
+                                <a href="/shop">Shop</a>
                             </li>
 
                             <li>
-                                <a href="blog-list.html">Blog</a>
+                                <a href="/blog">Blog</a>
                             </li>
 
                             <li>
-                                <a href="gallery-01.html">Gallery</a>
+                                <a href="/galley">Gallery</a>
                             </li>
 
                             <li>
-                                <a href="contact-01.html">Contact</a>
+                                <a href="/contact">Contact</a>
                             </li>
                         </ul>
                     </div>

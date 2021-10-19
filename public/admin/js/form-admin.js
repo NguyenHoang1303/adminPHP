@@ -1,7 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     const thumbnail = document.forms['formCategory']['thumbnail'];
-
+    if (thumbnail.value.length > 1){
+        thumbnail.value.split(',').forEach(ele => {
+            if (ele.length > 0) {
+                document.getElementById('preview-img').innerHTML += `<img src="${ele}" class="col-md-5 col-sm-5 img-thumbnail mr-2 mb-2 imagesChoice">`;
+            }
+        })
+    }
 
     const myWidget = cloudinary.createUploadWidget({
             cloudName: 'nguyenhs',
@@ -15,22 +21,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     );
 
-    const update = $('#update')
-    if (update.text().length > 0){
-        thumbnail.value.split(',').forEach(ele => {
-            if (ele.length > 0) {
-                document.getElementById('preview-img').innerHTML += `<img src="${ele}" class="col-md-5 col-sm-5 img-thumbnail mr-2 mb-2 imagesChoice">`;
-            }
-        })
-    }
+
 
     document.getElementById("upload_widget").addEventListener("click", function () {
         thumbnail.value = '';
         $('#preview-img').html("");
         myWidget.open();
     }, false);
+
     const reset = $('#reset');
-    console.log(reset);
     const listImage = $("#preview-img");
     const price = $('input[name="price"]');
     const name = $('input[name="name"]');

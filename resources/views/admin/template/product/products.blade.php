@@ -127,20 +127,14 @@
                                         @foreach($data as $item)
                                             <tr>
                                                 <td>{{$item->name}}</td>
-                                                <td><img src="{{explode(",",$item->thumbnail)[0]}}" width="100px"
+                                                <td><img src="{{$item->firstImage}}" width="100px"
                                                          alt="">
                                                 </td>
                                                 <td>{{$item->description}}</td>
-                                                <td>{{number_format($item->price, 2, ',', ' ')}}</td>
-                                                <td>{{$item->categoryId}}</td>
+                                                <td>{{$item->formatPrice}}</td>
+                                                <td>{{$item->category->name}}</td>
                                                 <td>
-                                                    @if($item->status == 1)
-                                                        Còn hàng
-                                                    @elseif($item->status == 0)
-                                                        hết hàng
-                                                    @else
-                                                        deleted
-                                                    @endif
+                                                    {{$item->handlerStatus}}
                                                 </td>
                                                 <td>{{$item->created_at}}</td>
                                                 <td>{{$item->updated_at}}</td>
@@ -150,7 +144,7 @@
                                                           data-toggle="modal"
                                                           data-target="#informationModal"
                                                           data-created_at="{{$item->created_at}}"
-                                                          data-category_id="{{$item->categoryId}}"
+                                                          data-category_id="{{$item->category_id}}"
                                                           data-updated_at="{{$item->updated_at}}"
                                                           data-description="{{$item->description}}"
                                                           data-thumbnail="{{$item->thumbnail}}"
@@ -211,7 +205,7 @@
     {{------------------------------------------------------------Modal Information------------------------------------------------------}}
     <?php
     $lisFieldModal = [
-        'categoryId' => "categoryId",
+        'category_id' => "category_id",
         'detail' => 'detail',
         'price' => 'price',
         'thumbnail' => 'thumbnail',

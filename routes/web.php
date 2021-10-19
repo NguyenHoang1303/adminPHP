@@ -4,6 +4,7 @@ use App\Http\Controllers\Admincontroller;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\user\HomeController;
+use App\Http\Controllers\user\ShopController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -62,3 +63,14 @@ Route::prefix('/admin/product')->group(function (){
 
 //============================================ User ==============================================================
 Route::get('/home',[HomeController::class,'getViewHome']);
+Route::get('/shop',[ShopController::class,'getShop']);
+Route::get('/product/search',[ShopController::class,'search']);
+Route::get('/shop/detail/{id}',[ShopController::class,'getInformation']);
+
+
+
+
+
+
+
+Route::get('/test',[HomeController::class,'test']);

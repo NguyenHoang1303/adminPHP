@@ -16,10 +16,9 @@ class ProductController extends Controller
     function getProducts()
     {
         $paginate = 6;
-        $sumRecord = DB::table('products')->count();
-        $categories = DB::table('categories')->get();
-        $data = DB::table('products')
-            ->where('status', '!=', -1)
+        $sumRecord = Product::count();
+        $categories = Category::all();
+        $data = Product::where('status', '!=', -1)
             ->paginate($paginate);
         return view('admin.template.product.products', [
             'data' => $data,
@@ -38,7 +37,7 @@ class ProductController extends Controller
 
     function create(ProductRequest $req)
     {
-        $existName = DB::table('products')->where('name', $req->input('name'))->exists();
+        $existName = Product::where('name', $req->input('name'))->exists();
         if ($existName) {
             return redirect()
                 ->back()
@@ -72,15 +71,15 @@ class ProductController extends Controller
 
     function getInformation($id)
     {
-        $products = DB::table('products')->where('id', $id);
-        $categories = DB::table('categories')->get();
+        $products = Product::find($id);
+        $categories = Category::all();
         if (!$products->exists()) {
             return redirect()
                 ->back()
                 ->with('fail', 'Error! An error occurred. Please try again later. Please try again');
         }
         return view('admin.template.product.form-product', [
-            'item' => $products->first(),
+            'item' => $products,
             'categories' => $categories,
         ]);
     }
@@ -89,8 +88,8 @@ class ProductController extends Controller
     {
         $req->request->remove('_token');
         $req->request->add(['updated_at' => Carbon::now('Asia/Ho_Chi_Minh')]);
-        $category = DB::table('products')->where('id', $req->get('id'));
-        $category->update($req->all());
+        $product = DB::table('products')->where('id', '=', $req->get('id'));
+        $product->update($req->all());
         return redirect('/admin/product')
             ->with('successUpdate', 'Successfully update product!');
     }
@@ -121,21 +120,20 @@ class ProductController extends Controller
                 break;
         }
 
-        $products = DB::table('products')
-            ->where('status', '!=', -1);
+        $products = DB::table('products')->where('status', '!=', -1);
 
         if (isset($name)) {
             $products->where('name', 'LIKE', "%$name%")
                 ->orWhere('description', 'LIKE', "%$name%");
         }
         if (isset($category)) {
-            if ($category != -1){
-                $products->where('categoryId', $category);
+            if ($category != -1) {
+                $products->where('category_id', $category);
             }
 
         }
         if (isset($typeSort) && isset($column)) {
-            if ($sort != -1){
+            if ($sort != -1) {
                 $products->orderBy($column, $typeSort);
             }
         }

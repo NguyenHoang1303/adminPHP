@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //==================================Form search and sort==================================================================
     $('#delete-search').on('click', function () {
-        $('input[name="query"]').val('')
+        $('input[name="query"]').val('');
     })
     $('#select-sort').change(function () {
         this.form.submit();
@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (thumbnails !== undefined){
             const listThumbnails = thumbnails.split(',');
+            listThumbnails.pop();
             for (const img of listThumbnails) {
                 testImage(img);
             }

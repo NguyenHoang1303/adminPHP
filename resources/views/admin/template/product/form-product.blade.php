@@ -1,6 +1,10 @@
 @extends('admin.master-admin')
 @section('page-css')
     <style>
+        .error {
+            color: red;
+        }
+
         .x_title .alert-danger {
             color: #ffffff;
             background-color: rgba(232, 38, 16, 0.7);
@@ -34,8 +38,12 @@
                             </ul>
                         </div>
                     @endif
-                    @if(Session::has('createOk'))
-                        <div class="col-md-6 col-sm-6 success text-center p-1"><h6>{{ Session::get('createOk') }}</h6>
+                    @if(session()->has('createOk'))
+                        <div class="col-md-6 col-sm-6 success text-center p-1"><h6>{{ session()->get('createOk') }}</h6>
+                        </div>
+                    @endif
+                    @if(session()->has('nameExist'))
+                        <div class="col-md-6 col-sm-6 error text-center p-1"><h6>{{ session()->get('nameExist') }}</h6>
                         </div>
                     @endif
                     <div class="clearfix"></div>
@@ -73,11 +81,13 @@
                         <div class="form-group item">
                             <label class="col-form-label col-md-3 col-sm-3 label-align">Categories *</label>
                             <div class="col-md-6 col-sm-6 col-form-label">
-                                <select name="categoryId" class="form-control">
+                                <select name="category_id" class="form-control">
                                     <option selected disabled>--Select--</option>
                                     @foreach($categories as $category)
                                         <option value="{{$category->id}}"
-                                            {{isset($item) && $item->categoryId == $category->id ? 'selected': '' }}>
+                                            {{isset($item) && $item->category_id == $category->id ? 'selected': '' }}
+                                            {{request()->old('category_id') == $category->id ? 'selected': '' }}>
+
                                             {{$category->name}}</option>
                                     @endforeach
                                 </select>
@@ -88,13 +98,14 @@
                         </div>
                         <?php
                         $status = [
-                            (object)[
-                                'name' => 'còn hàng',
-                                'value' => 1
-                            ],
+
                             (object)[
                                 'name' => 'hết hàng',
                                 'value' => 0
+                            ],
+                            (object)[
+                                'name' => 'còn hàng',
+                                'value' => 1
                             ],
                         ]
                         ?>
@@ -156,8 +167,7 @@
                             <div class="col-md-6 col-sm-6 offset-md-3">
                                 <a class="btn btn-primary" style="color: white" href="{{route('products')}}">Cancel</a>
                                 <button class="btn btn-primary" id="reset" type="reset">Reset</button>
-                                <button class="btn btn-success" id="{{!isset($item) ? 'create':'update'}}">Submit
-                                </button>
+                                <button class="btn btn-success">Submit</button>
                             </div>
                         </div>
 

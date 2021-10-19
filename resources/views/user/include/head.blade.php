@@ -6,9 +6,9 @@
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/user/vendor/bootstrap/css/bootstrap.min.css">
 <!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+{{--<link rel="stylesheet" type="text/css" href="/user/fonts/font-awesome-4.7.0/css/font-awesome.min.css">--}}
 <!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href="fonts/linearicons-v1.0.0/icon-font.min.css">
+{{--<link rel="stylesheet" type="text/css" href="fonts/linearicons-v1.0.0/icon-font.min.css">--}}
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/user/vendor/animate/animate.css">
 <!--===============================================================================================-->
@@ -23,10 +23,7 @@
 <link rel="stylesheet" type="text/css" href="/user/vendor/slick/slick.css">
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/user/vendor/perfect-scrollbar/perfect-scrollbar.css">
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href="/user/vendor/revolution/css/layers.css">
-<link rel="stylesheet" type="text/css" href="/user/vendor/revolution/css/navigation.css">
-<link rel="stylesheet" type="text/css" href="/user/vendor/revolution/css/settings.css">
+
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/user/vendor/MagnificPopup/magnific-popup.css">
 <!--===============================================================================================-->

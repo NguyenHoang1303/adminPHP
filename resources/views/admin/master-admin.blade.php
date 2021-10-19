@@ -67,7 +67,5 @@
 </div>
 @include('admin.include.script')
 @yield('page-script')
-<!-- Custom Theme Scripts -->
-<script src="/build/js/custom.min.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------
 Project: Oragnive
 Version:  1.0
-Last change:  
+Last change:
 Assigned to:  Le Xuan Bach
 Primary use:  Company
 -------------------------------------------------------------------*/
@@ -2365,12 +2365,6 @@ input.num-product::-webkit-inner-spin-button {
     display: none;
 }
 
-.rs1-select2 .select2-container--default .select2-selection--single .select2-selection__arrow::after {
-    content: "\f0d7";
-    font-family: FontAwesome;
-    font-size: 16px;
-    color: #ccc;
-}
 
 .rs1-select2 .select2-container--default .select2-selection--single .select2-selection__arrow:hover:after {
     color: #81b03f;
@@ -3390,7 +3384,7 @@ input.num-product::-webkit-inner-spin-button {
 }
 
 /*==================================================================
-    SIZE SIZE SIZE SIZE SIZE SIZE SIZE SIZE SIZE SIZE SIZE SIZE SIZE 
+    SIZE SIZE SIZE SIZE SIZE SIZE SIZE SIZE SIZE SIZE SIZE SIZE SIZE
 ==================================================================*/
 
 /*//////////////////////////////////////////////////////////////////
@@ -3990,7 +3984,7 @@ input.num-product::-webkit-inner-spin-button {
 }
 
 /*==================================================================
-   BACKGROUND BACKGROUND BACKGROUND BACKGROUND BACKGROUND BACKGROUND 
+   BACKGROUND BACKGROUND BACKGROUND BACKGROUND BACKGROUND BACKGROUND
 ==================================================================*/
 
 .bg0 {
@@ -4161,7 +4155,7 @@ input.num-product::-webkit-inner-spin-button {
 }
 
 /*==================================================================
- HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW 
+ HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW HOW
 ==================================================================*/
 
 .plh0::-webkit-input-placeholder {
