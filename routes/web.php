@@ -54,7 +54,7 @@ Route::prefix('/admin/category')->group(function (){
 Route::prefix('/admin/product')->group(function (){
     Route::get('/', [ProductController::class, 'getProducts'])->name('products');
     Route::get('/form', [ProductController::class, 'getForm']);
-    Route::post('/form/create', [ProductController::class, 'create'])->name('createProduct');
+    Route::post('/form/create', [ProductController::class, 'create'])->middleware('cors')->name('createProduct');
     Route::get('/update/{id}', [ProductController::class, 'getInformation']);
     Route::post('/update', [ProductController::class, 'update'])->name('updateProduct');
     Route::get('/delete/{id}', [ProductController::class, 'delete']);

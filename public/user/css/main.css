@@ -52,15 +52,15 @@ Input, textarea : 14px/1.6 'Lato-Regular','Lato-Light', Arial, sans-serif;
     src: url('../fonts/Lato/Lato-Light.ttf');
 }
 
-@font-face {
-    font-family: Lato-LightItalic;
-    src: url('../fonts/Lato/Lato-LightItalic.ttf');
-}
+/*@font-face {*/
+/*    font-family: Lato-LightItalic;*/
+/*    src: url('../fonts/Lato/Lato-LightItalic.ttf');*/
+/*}*/
 
-@font-face {
-    font-family: Lato-SemiBold;
-    src: url('../fonts/Lato/Lato-SemiBold.ttf');
-}
+/*@font-face {*/
+/*    font-family: Lato-SemiBold;*/
+/*    src: url('../fonts/Lato/Lato-SemiBold.ttf');*/
+/*}*/
 
 @font-face {
     font-family: Lato-Bold;
@@ -72,10 +72,10 @@ Input, textarea : 14px/1.6 'Lato-Regular','Lato-Light', Arial, sans-serif;
     src: url('../fonts/Lato/Lato-Black.ttf');
 }
 
-@font-face {
-    font-family: Lato-Hairline;
-    src: url('../fonts/Lato/Lato-Hairline.ttf');
-}
+/*@font-face {*/
+/*    font-family: Lato-Hairline;*/
+/*    src: url('../fonts/Lato/Lato-Hairline.ttf');*/
+/*}*/
 
 /*------------------------------------------------------------------
 [ 2 ]*/
@@ -88,26 +88,26 @@ Input, textarea : 14px/1.6 'Lato-Regular','Lato-Light', Arial, sans-serif;
 /*------------------------------------------------------------------
 [ 3 ]*/
 
-@font-face {
-    font-family: Pacifico-Regular;
-    src: url('../fonts/Pacifico/Pacifico-Regular.ttf');
-}
+/*@font-face {*/
+/*    font-family: Pacifico-Regular;*/
+/*    src: url('../fonts/Pacifico/Pacifico-Regular.ttf');*/
+/*}*/
 
 /*------------------------------------------------------------------
 [ 4 ]*/
 
-@font-face {
-    font-family: Courgette-Regular;
-    src: url('../fonts/Courgette/Courgette-Regular.ttf');
-}
+/*@font-face {*/
+/*    font-family: Courgette-Regular;*/
+/*    src: url('../fonts/Courgette/Courgette-Regular.ttf');*/
+/*}*/
 
 /*------------------------------------------------------------------
 [ 5 ]*/
 
-@font-face {
-    font-family: Quattrocento-Regular;
-    src: url('../fonts/Quattrocento/Quattrocento-Regular.ttf');
-}
+/*@font-face {*/
+/*    font-family: Quattrocento-Regular;*/
+/*    src: url('../fonts/Quattrocento/Quattrocento-Regular.ttf');*/
+/*}*/
 
 /*------------------------------------------------------------------
 [ 6 ]*/
@@ -117,18 +117,18 @@ Input, textarea : 14px/1.6 'Lato-Regular','Lato-Light', Arial, sans-serif;
     src: url('../fonts/Bitter/Bitter-Regular.ttf');
 }
 
-@font-face {
-    font-family: Bitter-Bold;
-    src: url('../fonts/Bitter/Bitter-Bold.ttf');
-}
+/*@font-face {*/
+/*    font-family: Bitter-Bold;*/
+/*    src: url('../fonts/Bitter/Bitter-Bold.ttf');*/
+/*}*/
 
-/*------------------------------------------------------------------
-[ 7 ]*/
+/*!*------------------------------------------------------------------*/
+/*[ 7 ]*!*/
 
-@font-face {
-    font-family: GreatVibes-Regular;
-    src: url('../fonts/GreatVibes/GreatVibes-Regular.ttf');
-}
+/*@font-face {*/
+/*    font-family: GreatVibes-Regular;*/
+/*    src: url('../fonts/GreatVibes/GreatVibes-Regular.ttf');*/
+/*}*/
 
 /*//////////////////////////////////////////////////////////////////
 [ RS PLUGIN ]*/
@@ -650,8 +650,8 @@ Input, textarea : 14px/1.6 'Lato-Regular','Lato-Light', Arial, sans-serif;
 .cart-header {
     position: absolute;
     z-index: 1200;
-    right: 0;
-    top: 100%;
+    right: 36px;
+    top: 60%;
     width: 244px;
     background: #fff;
     padding: 40px 30px;

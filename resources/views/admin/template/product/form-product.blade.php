@@ -1,6 +1,15 @@
 @extends('admin.master-admin')
 @section('page-css')
     <style>
+        .close-preview {
+            font-size: 15px;
+            position: absolute;
+            right: 5px;
+            top: -9px;
+            z-index: 1000;
+            cursor: pointer;
+        }
+
         .error {
             color: red;
         }
@@ -142,13 +151,17 @@
                         <div class="item form-group">
                             <label class="col-form-label col-md-3 col-sm-3 label-align"> Image *</label>
                             <div class="col-md-6 col-sm-6 ">
-                                <button type="button" id="upload_widget" class="cloudinary-button">Upload files</button>
+                                <input type="hidden" class="form-control" name="thumbnail"
+                                       value="{{ $item->thumbnail ?? request()->old('thumbnail') }}">
+                                {{--                                <a href="#" id="opener">upload</a>--}}
+                                <button type="button" id="upload_widget" class="cloudinary-button mb-3">Upload files
+                                </button>
                                 @error('thumbnail')
                                 <div class="text-danger">* {{ $message }}</div>
                                 @enderror
-                                <input type="hidden" class="form-control" name="thumbnail"
-                                       value="{{ $item->thumbnail ?? request()->old('thumbnail') }}">
-                                <div id="preview-img"></div>
+                                <div id="preview-img">
+
+                                </div>
                             </div>
                         </div>
                         <div class="item form-group">
