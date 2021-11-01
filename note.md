@@ -569,3 +569,301 @@ DB_PASSWORD=
                 </li>
             </ul>
         </li>
+
+Hướng dẫn sử dụng comment facebook trên trang.
+- Đăng ký developer app tại https://developers.facebook.com/apps
+
+- Vào link https://developers.facebook.com/docs/plugins/comments/
+    - Kéo xuống mục 3 Sao chép và dán đoạn mã, click lấy mã.
+    - Copy mã đặt vào trang.
+  
+
+- Hướng dẫn live chat - 1 min.
+- Đăng ký tài khoản https://www.tawk.to/
+
+- Copy code paste vào trang cần chat.
+
+Hướng dẫn gửi mail sử dụng laravel, tài khoản gmai
+
+- Các bước thực hiện.
+    - Tạo tài khoản gmail (nếu chưa có)
+    - Tạo mật khẩu ứng dụng gmail.
+        - Mở bảo mật 2 lớp.
+        - Tạo mật khẩu và copy.
+    - Cấu hình mail trong laravel.
+        - File config/mail
+<?php
+
+return [
+"driver" => "smtp",
+"host" => "smtp.gmail.com",
+"port" => 587,
+"username" => “taikhoan@gmail.com",
+"password" => "mat-khau-ung-dung”,
+"encryption" => "tls"
+];
+- Cài đặt thư viện gửi mail
+    - composer require swiftmailer/swiftmailer
+- Tạo view cho email.
+    - Tạo file .blade như bình thường với các biến cần thiết.
+- Send mail.
+$data = array(
+'username'=>'xuanhung',
+'namegift'=>'Hello world',
+'transaction' => 'as');
+
+Mail::send('emails.send', $data, function($message) {
+$message->to('xuanhung2401@gmail.com', 'Tutorials Point')->subject('Laravel HTML Testing Mail');
+$message->from('xuanhung2401@gmail.com','Xuan Hung');
+});
+
+###Session và việc sử dụng session trong laravel.
+- Hiểu đơn giản là nơi lưu trữ các biến trong một thời gian có hạn, thường sẽ lưu những thông tin không quá quan trọng.
+  Tuỳ vào mức độ bảo mật mà thời gian expired của session sẽ ngắn hơn. Một số trường hợp ứng dụng của Session đó là việc
+  lưu thông tin của người dùng vừa đăng nhập (id, username, email, fullName, thumbnail, avatar) hoặc lưu những thông tin
+  như sản phẩm vừa xem, cụ thể hơn có thể là đơn hàng.
+- Session có mối quan hệ với Cookie, mỗi khi người dùng vào một trang có enable session thì người dùng sẽ được cung cấp
+  một session id, và id này sẽ được lưu ở Cookie. Khi một thông tin lưu ở trong cookie thì mỗi request sẽ tự động đính kèm
+  thông tin đó ở trong header.
+- session storage, local storage (yêu cầu về version của trình duyệt.) -> cookie. 
+- users - credentials: token_key (access token), user_id (user nào), expired_time(thời gian hết), refresh_token (cấp phát lại token)
+- Một số thao tác cơ bản khi làm việc với session
+    - Lưu thông tin vào session.
+
+          \Illuminate\Support\Facades\Session::put('ten-bien', $giaTriCuaBien);
+    - Lấy thông tin từ session.
+
+          \Illuminate\Support\Facades\Session::get('ten-bien');
+    - Remove thông tin khỏi session.
+
+          \Illuminate\Support\Facades\Session::forget('ten-bien');
+    - Xoá tất cả thông tin trong session.
+
+          \Illuminate\Support\Facades\Session::flush();
+    - Thêm một biến vào session theo kiểu array (lúc này biến được thêm mặc định là 1 phần tử)
+
+          \Illuminate\Support\Facades\Session::push('ten-cua-array', $phanTuTrongArray);
+    - Kiểm tra sự tồn tại của biến trong session, hàm này trả về boolean.
+
+          \Illuminate\Support\Facades\Session::has('ten-cua-bien');
+    - Thêm một biến vào session để chỉ sử dụng một lần (Session sẽ tự xoá biến này khi lấy ra lần đầu tiên)
+
+          \Illuminate\Support\Facades\Session::flash('ten-bien', $giaTriCuaBien);
+
+- Xây dựng một shopping cart với laravel session một cách cơ bản.
+    - Code phía controller.
+
+          <?php
+
+          namespace App\Http\Controllers;
+
+          use App\Models\Product;
+          use Illuminate\Http\Request;
+          use Illuminate\Support\Facades\Session;
+          use stdClass;
+
+          class ShoppingCartController extends Controller
+          {
+              public static $menu_parent = 'shopping-cart';
+
+          // show thông tin giỏ hàng.
+          public function show()
+          {
+              // kiểm tra sự tồn tại của shopping cart trong session.
+              $shoppingCart = null;
+              // nếu có shopping cart rồi thì lấy ra
+              if (Session::has('shoppingCart')) {
+                  $shoppingCart = Session::get('shoppingCart');
+              } else {
+                  // nếu chưa có thì tạo shopping cart mới.
+                  $shoppingCart = [];
+              }
+              return view('cart', [
+                  'shoppingCart' => $shoppingCart
+              ]);
+          }
+
+              // Thêm sản phẩm vào giỏ hàng kèm số lượng sản phẩm.
+              public function add(Request $request)
+              {
+                  // lấy thông tin sản phẩm.
+                  $productId = $request->get('id');
+                  // lấy số lượng sản phẩm cần thêm vào giỏ hàng.
+                  $productQuantity = $request->get('quantity');
+                  if($productQuantity <= 0){
+                      return view('admin.errors.404', [
+                          'msg' => 'Số lượng sản phẩm cần lớn hơn 0.'
+                      ]);
+                  }
+                  // 1. Kiểm tra sự tồn tại của sản phẩm.
+                  $obj = Product::find($productId);
+                  // nếu không tồn tại thì trả về 404.
+                  if ($obj == null) {
+                      return view('admin.errors.404', [
+                          'msg' => 'Không tìm thấy sản phẩm'
+                      ]);
+                  }
+                  // nếu có sản phẩm trong db.
+                  // 2. Check số lượng tồn kho. Nếu như số lượng mua lớn hơn số lượng trong kho thì báo lỗi.
+          
+                  // kiểm tra sự tồn tại của shopping cart trong session.
+                  $shoppingCart = null;
+                  // nếu có shopping cart rồi thì lấy ra
+                  if (Session::has('shoppingCart')) {
+                      $shoppingCart = Session::get('shoppingCart');
+                  } else {
+                      // nếu chưa có thì tạo shopping cart mới.
+                      $shoppingCart = [];
+                  }
+                  // kiểm tra sản phẩm có tồn tại trong giỏ hàng không.
+                  if (array_key_exists($productId, $shoppingCart)) {
+                      // nếu có sản phẩm rồi thì update số lượng
+                      $existingCartItem = $shoppingCart[$productId];
+                      // tăng số lượng theo số lượng cần mua thêm.
+                      $existingCartItem->quantity += $productQuantity;
+                      // và lưu lại vào đối tượng shopping cart.
+                      $shoppingCart[$productId] = $existingCartItem;
+                  } else {
+                      // nếu chưa có tạo ra một cartItem mới, có thông tin trùng với thông tin sản phẩm từ
+                      // trong database.
+                      $cartItem = new stdClass();
+                      $cartItem->id = $obj->id;
+                      $cartItem->name = $obj->name;
+                      $cartItem->unitPrice = $obj->price;
+                      $cartItem->quantity = $productQuantity;
+                      // đưa cartItem vào trong shoppingCart.
+                      $shoppingCart[$productId] = $cartItem;
+                  }
+                  // update thông tin shopping cart vào session.
+                  Session::put('shoppingCart', $shoppingCart);
+                  return redirect('/cart/show');
+              }
+          
+              public function update(Request $request)
+              {
+                  // lấy thông tin sản phẩm.
+                  $productId = $request->get('id');
+                  // lấy số lượng sản phẩm cần thêm vào giỏ hàng.
+                  $productQuantity = $request->get('quantity');
+                  if($productQuantity <= 0){
+                      return view('admin.errors.404', [
+                          'msg' => 'Số lượng sản phẩm cần lớn hơn 0.'
+                      ]);
+                  }
+                  // 1. Kiểm tra sự tồn tại của sản phẩm.
+                  $obj = Product::find($productId);
+                  // nếu không tồn tại thì trả về 404.
+                  if ($obj == null) {
+                      return view('admin.errors.404', [
+                          'msg' => 'Không tìm thấy sản phẩm'
+                      ]);
+                  }
+                  // nếu có sản phẩm trong db.
+                  // 2. Check số lượng tồn kho. Nếu như số lượng mua lớn hơn số lượng trong kho thì báo lỗi.
+          
+                  // kiểm tra sự tồn tại của shopping cart trong session.
+                  $shoppingCart = null;
+                  // nếu có shopping cart rồi thì lấy ra
+                  if (Session::has('shoppingCart')) {
+                      $shoppingCart = Session::get('shoppingCart');
+                  } else {
+                      // nếu chưa có thì tạo shopping cart mới.
+                      $shoppingCart = [];
+                  }
+                  // kiểm tra sản phẩm có tồn tại trong giỏ hàng không.
+                  if (array_key_exists($productId, $shoppingCart)) {
+                      // nếu có sản phẩm rồi thì update số lượng
+                      $existingCartItem = $shoppingCart[$productId];
+                      // tăng số lượng theo số lượng cần mua thêm.
+                      $existingCartItem->quantity = $productQuantity;
+                      // và lưu lại vào đối tượng shopping cart.
+                      $shoppingCart[$productId] = $existingCartItem;
+                  }
+                  // update thông tin shopping cart vào session.
+                  Session::put('shoppingCart', $shoppingCart);
+                  return redirect('/cart/show');
+              }
+          
+              public function remove(Request $request)
+              {
+                  $productId = $request->get('id');
+                  $shoppingCart = null;
+                  // nếu có shopping cart rồi thì lấy ra
+                  if (Session::has('shoppingCart')) {
+                      $shoppingCart = Session::get('shoppingCart');
+                  } else {
+                      // nếu chưa có thì tạo shopping cart mới.
+                      $shoppingCart = [];
+                  }
+                  unset($shoppingCart[$productId]); // Xoá giá trị theo key ở trong map với php.
+                  Session::put('shoppingCart', $shoppingCart);
+                  return redirect('/cart/show');
+              }
+          }
+    - Code phía giao diện.
+
+          <!DOCTYPE html>
+          <html>
+          <title>W3.CSS</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+          <body>
+          
+          <div class="w3-container">
+              <h2>Shopping cart</h2>
+              <p>Update your cart information</p>
+          
+              <table class="w3-table w3-table-all">
+                  <tr>
+                      <th>Product Id</th>
+                      <th>Product Name</th>
+                      <th>Unit Price</th>
+                      <th>Quantity</th>
+                      <th>Total Price</th>
+                      <th>Action</th>
+                  </tr>
+                  <?php
+                      $totalPrice = 0;
+                  ?>
+                  @foreach($shoppingCart as $cartItem)
+                      <?php
+                      if (isset($cartItem)) {
+                          $totalPrice += $cartItem->unitPrice * $cartItem->quantity;
+                      }
+                      ?>
+                  <tr>
+                      <form action="/cart/update" method="post">
+                          @csrf
+                      <td>{{$cartItem->id}}</td>
+                      <td>{{$cartItem->name}}</td>
+                      <td>{{$cartItem->unitPrice}}</td>
+                      <td>
+                          <input type="hidden" name="id" value="{{$cartItem->id}}">
+                          <input name="quantity" class="w3-input w3-border w3-quarter" type="number" min="1" value="{{$cartItem->quantity}}">
+                      </td>
+                      <td>{{$cartItem->unitPrice * $cartItem->quantity}}</td>
+                      <td>
+                          <button class="w3-button w3-indigo">Update</button>
+                          <a href="/cart/remove?id={{$cartItem->id}}" onclick="return confirm('Bạn có chắc muốn xoá sản phẩm này khỏi giỏ hàng?')" class="w3-button w3-red">Delete</a>
+                      </td>
+                      </form>
+                  </tr>
+                  @endforeach
+              </table>
+              <div style="margin-top: 20px">
+                  <strong>Total price {{$totalPrice}}</strong>
+              </div>
+          </div>
+          
+          </body>
+          </html>
+    - Code phần routing.
+
+          Route::get('/cart/show', [ShoppingCartController::class, 'show']);
+          Route::get('/cart/add', [ShoppingCartController::class, 'add']);
+          Route::post('/cart/update', [ShoppingCartController::class, 'update']);
+          Route::get('/cart/remove', [ShoppingCartController::class, 'remove']);
+
+
+- Xây dựng shopping cart sử dụng thư viện
+    - https://github.com/Crinsane/LaravelShoppingcart#usage###Xử lý lưu thông tin đơn hàng.

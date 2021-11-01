@@ -1,4 +1,4 @@
-<title>Home 06</title>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
@@ -27,6 +27,9 @@
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/user/vendor/MagnificPopup/magnific-popup.css">
 <!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href="/user/css/util.css">
-<link rel="stylesheet" type="text/css" href="/user/css/main.css">
+<style>
+    .icon-header-noti::after{
+
+    }
+</style>
 <!--===============================================================================================-->

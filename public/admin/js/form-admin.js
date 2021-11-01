@@ -40,12 +40,11 @@ document.addEventListener("DOMContentLoaded", function () {
         $(this).parent().remove();
         const linkImg = $(this).siblings().attr('src');
         const arrayLinks = thumbnail.value.split(',');
-        console.log(arrayLinks)
+        arrayLinks.pop();
         const linksAfterRemove = arrayLinks.filter(ele => {
             return ele !== linkImg;
         })
         thumbnail.value = linksAfterRemove.length > 0 ? (linksAfterRemove.join(',') + ',') : '';
-        console.log(thumbnail.value);
         const deleteToken = $(this).siblings().attr('data-delete-token');
         deleteImageInCloudinary(deleteToken)
 

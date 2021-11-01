@@ -4,6 +4,8 @@
     <link rel="stylesheet" type="text/css" href="/user/vendor/revolution/css/layers.css">
     <link rel="stylesheet" type="text/css" href="/user/vendor/revolution/css/navigation.css">
     <link rel="stylesheet" type="text/css" href="/user/vendor/revolution/css/settings.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/util.css">
+    <link rel="stylesheet" type="text/css" href="/user/css/main.css">
 @endsection
 @section('content')
 

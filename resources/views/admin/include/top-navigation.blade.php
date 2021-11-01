@@ -1,8 +1,11 @@
 <?php
+
+use App\Models\Admin;
+
 $admin = array();
-if (Session::has('loginId'))
+if (session()->has('loginId'))
 {
-    $admin = DB::table('admins')->find(Session::get('loginId'));
+    $admin = Admin::find(session()->get('loginId'));
 }
 ?>
 

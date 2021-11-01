@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Admincontroller;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\user\CartController;
 use App\Http\Controllers\user\HomeController;
 use App\Http\Controllers\user\ShopController;
 use Illuminate\Support\Facades\Route;
@@ -57,9 +59,20 @@ Route::prefix('/admin/product')->group(function (){
     Route::post('/form/create', [ProductController::class, 'create'])->middleware('cors')->name('createProduct');
     Route::get('/update/{id}', [ProductController::class, 'getInformation']);
     Route::post('/update', [ProductController::class, 'update'])->name('updateProduct');
+    Route::get('/updateAll/{id}', [ProductController::class, 'getUpdateAllForm']);
+    Route::post('/updateAll', [ProductController::class, 'updateAll'])->name('updateAllProduct');
+    Route::get('/deleteAll', [ProductController::class, 'deleteAll']);
     Route::get('/delete/{id}', [ProductController::class, 'delete']);
+
     Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
 });
+//==========================================================================================================
+//Order
+Route::get('/admin/orders', [OrderController::class, 'getOrders']);
+Route::get('/admin/order/delete/{id}', [OrderController::class, 'delete']);
+Route::get('/admin/order/detail/{id}', [OrderController::class, 'getInformationOrder']);
+Route::get('/admin/order/update/status', [OrderController::class, 'updateStatus']);
+Route::get('/admin/order/search', [OrderController::class, 'search'])->name('searchOrder');
 
 //============================================ User ==============================================================
 Route::get('/home',[HomeController::class,'getViewHome']);
@@ -67,10 +80,17 @@ Route::get('/shop',[ShopController::class,'getShop']);
 Route::get('/product/search',[ShopController::class,'search']);
 Route::get('/shop/detail/{id}',[ShopController::class,'getInformation']);
 
+// Cart
+Route::prefix('/cart')->group(function (){
+    Route::get('/show',[CartController::class,'shopCart']);
+    Route::get('/add/{id}',[CartController::class,'addToCart']);
+    Route::get('/delete/{id}',[CartController::class,'delete']);
+    Route::post('/update',[CartController::class,'updateCart']);
+    Route::get('/checkout',[CartController::class,'getFormCheckout']);
+    Route::post('/checkout',[CartController::class,'checkout']);
+    Route::get('/confirm-order/{id}',[CartController::class,'confirm']);
+    Route::post('/create-payment',[CartController::class,'creatPayment']);
+    Route::post('/execute-payment',[CartController::class,'executePayment']);
 
+});
 
-
-
-
-
-Route::get('/test',[HomeController::class,'test']);

@@ -19,7 +19,7 @@
                         <div class="profile_img">
                             <div id="crop-avatar">
                                 <!-- Current avatar -->
-                                <img class="img-thumbnail" src="/images/jjjj.jpg" alt="Avatar"
+                                <img class="img-thumbnail" src="/admin/images/jjjj.jpg" alt="Avatar"
                                      title="Change the avatar">
                             </div>
                         </div>

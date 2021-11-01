@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\admin\ProductRequest;
+use App\Http\Requests\admin\ProductRequestUpdateAll;
 use App\Models\Category;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -37,125 +38,149 @@ class ProductController extends Controller
 
     function create(ProductRequest $req)
     {
-        $existName = Product::where('name', $req->input('name'))->exists();
-        if ($existName) {
+        try {
+            $existName = Product::where('name', $req->input('name'))->exists();
+            if ($existName) {
+                session()->flash('nameExist', 'Name exists, please try again.');
+                return redirect()
+                    ->back()
+                    ->withInput();
+            }
+
+            $category = new Product($req->all());
+            $category->save();
             return redirect()
                 ->back()
-                ->with('nameExist', 'Name Exists')
-                ->withInput();
+                ->with('create', 'Create new success!');
+        }catch (\Exception $e){
+            session()->flash('creatFail',"Creat new fail, please try again.");
+            return redirect()->back();
         }
-
-        $category = new Product($req->all());
-        $category->save();
-        return redirect()
-            ->back()
-            ->with('createOk', 'Successfully created a new product!');
     }
 
     function delete($id)
     {
-        $category = DB::table('products')->where('id', $id);
-        if (!$category->exists()) {
+        try {
+            $product = DB::table('products')->where('id', $id);
+
+            if (!$product->exists()) {
+                session()->flash('findFail', 'Error! An error occurred. Please try again later.');
+                return redirect()
+                    ->back();
+            }
+            $product->update([
+                'status' => -1,
+                'deleted_at' => Carbon::now('Asia/Ho_Chi_Minh'),
+            ]);
+            session()->flash('delete','Delete product success.');
+            return redirect()->back();
+
+        }catch (\Exception $e){
+            session()->flash('deleteFail',"Delete fail, please try again later.");
             return redirect()
-                ->back()
-                ->with('fail', 'Error! An error occurred. Please try again later. Please try again');
+                ->back();
         }
-        $category->update([
-            'status' => -1,
-            'deleted_at' => Carbon::now('Asia/Ho_Chi_Minh'),
-        ]);
-        return redirect()
-            ->back()
-            ->with('deleteSuccess', "Delete success!");
+    }
+
+    function deleteAll()
+    {
+        try {
+            Product::deleteAll();
+            session()->flash('delete', "Delete success!");
+            return redirect()
+                ->back();
+        } catch (\Exception $e) {
+            session()->flash('deleteFail', 'Delete record fail!!');
+            return redirect()->back();
+
+        }
     }
 
     function getInformation($id)
     {
-        $products = Product::find($id);
-        $categories = Category::all();
-        if (!$products->exists()) {
+        try {
+            $products = Product::find($id);
+            $categories = Category::all();
+            return view('admin.template.product.form-product', [
+                'item' => $products,
+                'categories' => $categories,
+            ]);
+        } catch (\Exception $e) {
+            session()->flash('findId', 'An error occurred. Please try again later.');
             return redirect()
-                ->back()
-                ->with('fail', 'Error! An error occurred. Please try again later. Please try again');
+                ->back();
+
         }
-        return view('admin.template.product.form-product', [
-            'item' => $products,
-            'categories' => $categories,
-        ]);
     }
 
     function update(ProductRequest $req)
     {
-        $req->request->remove('_token');
-        $req->request->add(['updated_at' => Carbon::now('Asia/Ho_Chi_Minh')]);
-        $product = DB::table('products')->where('id', '=', $req->get('id'));
-        $product->update($req->all());
-        return redirect('/admin/product')
-            ->with('successUpdate', 'Successfully update product!');
+        try {
+            $req->request->remove('_token');
+            $req->request->add(['updated_at' => Carbon::now('Asia/Ho_Chi_Minh')]);
+            $product = DB::table('products')->where('id', $req->get('id'));
+            $product->update($req->all());
+            session()->flash('update', 'Update product success!');
+            return redirect('/admin/product');
+        }catch (\Exception $e){
+            session()->flash('updateFail', 'Update fail, Please try again');
+            return redirect()->back();
+        }
+
+
+    }
+
+    function getUpdateAllForm($arrId)
+    {
+        $categories = Category::all();
+        return view('admin.template.product.form-product', [
+            'arrId' => $arrId,
+            'categories' => $categories,
+        ]);
+    }
+
+    function updateAll(ProductRequestUpdateAll $req)
+    {
+        try {
+            $arrId = explode(',', $req->get('id'));
+            $req->request->remove('_token');
+
+            $req->request->add(['updated_at' => Carbon::now('Asia/Ho_Chi_Minh')]);
+            $product = DB::table('products')->whereIn('id', $arrId);
+            $req->request->remove('id');
+            $product->update($req->all());
+
+            session()->flash('update', 'Successfully update product!');
+            return redirect('/admin/product');
+        } catch (\Exception $e) {
+            session()->flash('update', 'Update product fail!');
+            return redirect()->back();
+        }
     }
 
     function search(Request $request)
     {
-        $paginate = 6;
-        $name = $request->get('query');
-        $sort = $request->get('sort');
-        $category = $request->get('category');
+        try {
+            $paginate = 9;
+            $products = Product::findByStatusNotDelete()
+                ->findByName()
+                ->sortByName()
+                ->sortByPrice()
+                ->findByCategory();
 
-        switch ($sort) {
-            case "nameAsc":
-                $typeSort = 'asc';
-                $column = 'name';
-                break;
-            case "nameDesc":
-                $typeSort = 'Desc';
-                $column = 'name';
-                break;
-            case "priceAsc":
-                $typeSort = 'asc';
-                $column = 'price';
-                break;
-            case "priceDesc":
-                $typeSort = 'desc';
-                $column = 'price';
-                break;
-        }
-
-        $products = DB::table('products')->where('status', '!=', -1);
-
-        if (isset($name)) {
-            $products->where('name', 'LIKE', "%$name%")
-                ->orWhere('description', 'LIKE', "%$name%");
-        }
-        if (isset($category)) {
-            if ($category != -1) {
-                $products->where('category_id', $category);
-            }
-
-        }
-        if (isset($typeSort) && isset($column)) {
-            if ($sort != -1) {
-                $products->orderBy($column, $typeSort);
-            }
-        }
-
-
-        $item = $products->paginate($paginate)->appends($request->all());
-        $sum = $products->count();
-        if (isset($item)) {
             return view('admin.template.product.products', [
-                'data' => $item,
-                'oldQuery' => $name,
+                'data' => $products->paginate($paginate),
+                'oldName' => $request->get('name'),
                 'paginate' => $paginate,
-                'sumRecord' => $sum,
-                'sort' => $sort,
-                'category' => $category,
-                'categories' => DB::table('categories')->get(),
+                'sumRecord' => $products->count(),
+                'sortPrice' => $request->get('sortPrice'),
+                'sortName' => $request->get('sortName'),
+                'category' => $request->get('category'),
+                'categories' => Category::all(),
             ]);
-        } else {
-            return view('admin.template.product.products')
-                ->with('search', 'Not fount');
+        }catch (\Exception $e){
+            session()->flash('findFail','Not fail product.');
+            return redirect()->back();
         }
-
-
     }
 }

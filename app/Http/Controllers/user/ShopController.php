@@ -6,16 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
 {
+
     function getShop()
     {
         $paginate = 9;
 
         return view('user.template.shop-page', [
-            'products' => DB::table('products')->where('status', '!=', -1)->paginate($paginate),
+            'products' => Product::findByStatusNotDelete()->paginate($paginate),
             'categories' => Category::withCount('products')->get(),
             'sumProduct' => Product::count(),
             'limit' => $paginate,
@@ -25,63 +25,57 @@ class ShopController extends Controller
     function search(Request $request)
     {
         $paginate = 9;
-        $query = $request->get('query');
-        $sort = $request->get('sort');
-        $categoryId = $request->get('category');
-
-        switch ($sort) {
-            case "nameAsc":
-                $typeSort = 'asc';
-                $column = 'name';
-                break;
-            case "nameDesc":
-                $typeSort = 'Desc';
-                $column = 'name';
-                break;
-            case "priceAsc":
-                $typeSort = 'asc';
-                $column = 'price';
-                break;
-            case "priceDesc":
-                $typeSort = 'desc';
-                $column = 'price';
-                break;
-        }
-
-        $products = DB::table('products')->where('status', '!=', -1);
-
-        if (isset($query)) {
-            $products->where('name', 'LIKE', "%$query%")
-                ->orWhere('description', 'LIKE', "%$query%");
-        }
-
-        if (isset($categoryId)) {
-            $products->where('category_id', $categoryId);
-
-        }
-
-        if (isset($typeSort) && isset($column)) {
-            if ($sort != -1) {
-                $products->orderBy($column, $typeSort);
-            }
-        }
-
-        $data = $products->paginate($paginate)->appends($request->all());
+        $products = Product::findByStatusNotDelete()
+            ->findByName()
+            ->sortByName()
+            ->sortByPrice()
+            ->filterPrice()
+            ->findByCategory();
         return view('user.template.shop-page', [
-            'products' => $data,
-            'categories' =>Category::withCount('products')->get(),
-            'sumProduct' => $products->count(),
+            'products' => $products->paginate($paginate),
+            'oldName' => $request->get('name'),
+            'minPrice' => $request->get('minPrice'),
+            'maxPrice' => $request->get('maxPrice'),
             'limit' => $paginate,
-            'oldQuery' => $query,
-            'oldCategory' => $categoryId,
-            'sort' => $sort,
+            'sumProduct' => $products->count(),
+            'sortPrice' => $request->get('sortPrice'),
+            'sortName' => $request->get('sortName'),
+            'oldCategory' => $request->get('category'),
+            'categories' => Category::withCount('products')->get(),
         ]);
+
     }
 
     function getInformation($id)
     {
+        $arrId = [];
+        if (session()->has('recent_view')) {
+            $arrId = session()->get('recent_view');
+        }
+        if (!in_array($id,$arrId)){
+            if (sizeof($arrId) > 9){
+                array_shift($arrId);
+            }
+            array_push($arrId,$id);
+        }
+        array_push($arrId, $id);
+        session()->put('recent_view', $arrId);
+        $productsRecent = $this->getRecentProduct();
         return view('user.template.detail-page', [
             'product' => Product::find($id),
+            'productsRecent'=>$productsRecent,
         ]);
     }
+
+    function getRecentProduct()
+    {
+        $products = [];
+        if (session()->has('recent_view')){
+            $products = Product::findMany(session()->get('recent_view'));
+        }
+        return $products;
+    }
+
+
+
 }

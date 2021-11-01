@@ -1,4 +1,18 @@
 @extends('admin.master-admin')
+@section('page-css')
+    <style>
+        #delete-cate{
+            right: 5px;
+            position: absolute;
+            font-size: 18px;
+            top: 8px;
+            cursor: pointer;
+        }
+        #query{
+            padding-right: 20px;
+        }
+    </style>
+@endsection
 @section('breadcrumb')
     <div class="page-title">
         <div class="title_left">
@@ -29,10 +43,10 @@
                                 <div class="col-md-5 col-sm-5 form-group pull-right top_search">
                                     <div class="input-group">
                                         <div id="input-search">
-                                            <input id="query" type="text" class="form-control"
+                                            <input id="query" type="text" class="form-control "
                                                    value="{{$oldQuery ?? ""}}" name="query"
                                                    placeholder="Search for...">
-                                            <span id="delete-search">&times;</span>
+                                            <span id="delete-cate">&times;</span>
                                         </div>
                                         <span class="input-group-btn">
                                             <button class="btn btn-default">Go!</button>
@@ -105,13 +119,15 @@
                                                     <span id="information" class="hover-pointer dataItem"
                                                           data-toggle="modal"
                                                           data-target="#informationModal"
-                                                          data-created_at="{{$item->created_at}}"
-                                                          data-updated_at="{{$item->updated_at}}"
-                                                          data-status="{{$item->status}}"
-                                                          data-description="{{$item->description}}"
-                                                          data-thumbnail="{{$item->thumbnail}}"
-                                                          data-name="{{$item->name}}"
-                                                          data-id="{{$item->id}}">
+                                                          data-item="{
+                                                            &#34;id&#34;:&#34;{{$item->id}}&#34;,
+                                                            &#34;name&#34;:&#34;{{$item->name}}&#34;,
+                                                            &#34;description&#34;:&#34;{{$item->description}}&#34;,
+                                                            &#34;thumbnail&#34;:&#34;{{$item->thumbnail}}&#34;,
+                                                            &#34;status&#34;:&#34;{{$item->status}}&#34;,
+                                                            &#34;created_at&#34;:&#34;{{$item->created_at}}&#34;,
+                                                            &#34;updated_at&#34;:&#34;{{$item->updated_at}}&#34;
+                                                            }">
                                                         <i class="fa fa-info mr-1 text-primary"></i></span>
                                                         <span class="tooltip-text">Information</span>
                                                     </div>

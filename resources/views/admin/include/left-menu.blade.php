@@ -23,6 +23,10 @@
             <li><a href="/admin/profile"><i class="fa fa-user"></i> Profile </a>
             {{--profile--}}
 
+            {{--Orders--}}
+            <li><a href="/admin/orders"><i class="fa fa-shopping-cart"></i> Orders </a>
+            {{--Orders--}}
+
             {{--Category Menu--}}
             <li><a><i class="fa fa-tags"></i> Category <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">

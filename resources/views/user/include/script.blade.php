@@ -6,8 +6,7 @@
 {{--<script src="/user/vendor/bootstrap/js/popper.js"></script>--}}
 {{--<script src="/user/vendor/bootstrap/js/bootstrap.min.js"></script>--}}
 <!--===============================================================================================-->
-<!-- Go to www.addthis.com/dashboard to customize your tools -->
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-616f015ea0f50d4a"></script>
+
 <!--===============================================================================================-->
 <script src="/user/vendor/select2/select2.min.js"></script>
 <!--===============================================================================================-->
@@ -25,4 +24,5 @@
 <!--===============================================================================================-->
 <script src="/user/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <!--===============================================================================================-->
-
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-616f015ea0f50d4a"></script>

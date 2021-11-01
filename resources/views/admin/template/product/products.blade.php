@@ -1,24 +1,77 @@
 @extends('admin.master-admin')
 @section('page-css')
     <style>
-        #input-search {
-            position: relative;
+        .fa-sort-amount-desc {
+            cursor: pointer;
         }
 
-        #delete-search {
-            position: absolute;
+        .bs-glyphicons-list li span {
+            float: left;
             font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            right: 2px;
-            top: 8px;
+        }
+
+        .bs-glyphicons-list li i {
+            color: #000;
+            float: left;
+            margin-right: 20px;
+            font-size: 20px;
+        }
+
+        .bs-glyphicons-list li {
+            display: flex;
+            align-items: baseline;
+            width: 20%;
+            height: auto;
+            background-color: #ececec;
+
+        }
+
+        .bs-glyphicons-list a:hover {
+            background-color: #c4dcf4;
+            color: #FFF;
+        }
+
+        .bs-glyphicons-list li:hover {
+            background-color: #c4dcf4;
+            color: #FFF;
+        }
+        #sortName, #sortPrice{
+            border-radius: 20px;
+        }
+
+
+
+        #menu-table {
+            display: none;
         }
     </style>
 @endsection
 @section('breadcrumb')
-    <div class="page-title">
-        <div class="title_left">
+    <div class="page-title mb-4">
+        <div class="title_left mb-3">
             <h3>Admin | Product Page</h3>
+        </div>
+        <div class="title_right">
+            <div class="bs-glyphicons" id="menu-table">
+                <ul class="bs-glyphicons-list">
+                    <li>
+                        <i class="fa fa-check-circle-o text-danger"></i>
+                        <span class="text-danger" id="numberChoice">0 select</span>
+                    </li>
+                    <a id="deleteAll" href="/admin/product/deleteAll?arrId=">
+                        <li style="cursor: pointer">
+                            <i class="fa fa-trash-o"></i>
+                            <span style="color: #0b0b0b">Delete</span>
+                        </li>
+                    </a>
+                    <a id="updateAll" href="/admin/product/updateAll/">
+                        <li style="cursor: pointer">
+                            <i class="fa fa-edit"></i>
+                            <span style="color: #0b0b0b">Update</span>
+                        </li>
+                    </a>
+                </ul>
+            </div>
         </div>
     </div>
 @endsection
@@ -28,36 +81,30 @@
         <div class="col-md-12 col-sm-12 ">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2 class="col-sm-2 col-md-2">Product Manager</h2>
-                    <div class="col-sm-9 col-md-9">
-                        <form action="{{route('searchProduct')}}" method="get">
+                    <form action="{{route('searchProduct')}}" method="get" id="form-search">
+                        <h2 class="col-sm-2 col-md-2">Product Manager</h2>
+                        <div class="col-sm-9 col-md-9">
                             <div class="navbar-right">
-                                <div class="col-md-4 col-sm-4 form-group top_search pr-2">
-                                    <select name="sort" class="form-control" id="select-sort">
+                                <div class="col-md-4 col-sm-4 form-group pull-right top_search pr-2">
+                                    <select name="sortName" class="form-control sortProduct" id="">
 
-                                        <option value="-1"  selected>---Select option---</option>
-                                        <option value="nameAsc" {{isset($sort) && $sort == 'nameAsc'? 'selected' : ''}}>
+                                        <option selected value="0">---Name---</option>
+                                        <option
+                                            value="nameAsc" {{isset($sortName) && $sortName == 'nameAsc'? 'selected' : ''}}>
                                             Sort by name a-z
                                         </option>
                                         <option
-                                            value="nameDesc" {{isset($sort) && $sort == 'nameDesc'? 'selected' : ''}}>
+                                            value="nameDesc" {{isset($sortName) && $sortName == 'nameDesc'? 'selected' : ''}}>
                                             Sort by name z-a
                                         </option>
-                                        <option
-                                            value="priceAsc" {{isset($sort) && $sort == 'priceAsc'? 'selected' : ''}}>
-                                            Sort by price low to height
-                                        </option>
-                                        <option
-                                            value="priceDesc" {{isset($sort) && $sort == 'priceDesc'? 'selected' : ''}}>
-                                            Sort by price height to low
-                                        </option>
+
 
                                     </select>
                                 </div>
 
                                 <div class="col-md-4 col-sm-4 form-group pull-right top_search pr-2">
                                     <select name="category" class="form-control" id="select-category">
-                                        <option selected value="-1">---Select category---</option>
+                                        <option selected value="0">---Category---</option>
                                         @foreach($categories as $cate )
                                             <option
                                                 value="{{$cate->id}}" {{isset($category) && $category == $cate->id? 'selected' : ''}}>
@@ -68,42 +115,61 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-4 col-sm-4 form-group pull-right top_search">
-                                    <div class="input-group">
-                                        <div id="input-search">
-                                            <input id="query" type="text" class="form-control"
-                                                   value="{{$oldQuery ?? ""}}" name="query"
-                                                   placeholder="Search for...">
-                                            <span id="delete-search">&times;</span>
-                                        </div>
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default">Go!</button>
-                                        </span>
-                                    </div>
+                                <div class="col-md-4 col-sm-4 form-group pull-right  top_search">
+                                    <input  type="text" class="form-control query"
+                                           value="{{$oldName ?? ""}}" name="name"
+                                           placeholder="Search for...">
+                                    <span class="delete-search">&times;</span>
+                                    <span class="icon-search"><i class="fa fa-search"></i></span>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    @if(session()->has('fail'))
-                        <div style="width: 100%; display: flex; justify-content: center">
-                            <p style="margin: 0; font-size: 16px; color: red">{{session()->get('fail')}}</p>
-                        </div>
-                    @elseif(session()->has('deleteSuccess'))
-                        <div style="width: 100%; display: flex; justify-content: center">
-                            <p style="margin: 0; font-size: 16px; color: limegreen">{{session()->get('deleteSuccess')}}</p>
-                        </div>
-                    @elseif(session()->has('successUpdate'))
-                        <div style="width: 100%; display: flex; justify-content: center">
-                            <p style="margin: 0; font-size: 16px; color: limegreen">{{session()->get('successUpdate')}}</p>
-                        </div>
-                    @elseif(session()->has('search'))
-                        <div style="width: 100%; display: flex; justify-content: center">
-                            <p style="margin: 0; font-size: 16px; color: red">{{session()->get('search')}}</p>
-                        </div>
-                    @endif
 
-                    <div class="clearfix"></div>
+                        </div>
+                        <h2 class="col-sm-2 col-md-2"></h2>
+                        <div class="col-sm-9 col-md-9">
+                            <div class="navbar-right">
+                                <div class="col-md-4 col-sm-4 form-group top_search pr-2">
+                                    <select name="sortPrice" class="form-control sortProduct" >
+
+                                        <option selected value="0">---Price---</option>
+                                        <option
+                                            value="priceAsc" {{isset($sortPrice) && $sortPrice == 'priceAsc'? 'selected' : ''}}>
+                                            Sort by price low to height
+                                        </option>
+                                        <option
+                                            value="priceDesc" {{isset($sortPrice) && $sortPrice == 'priceDesc'? 'selected' : ''}}>
+                                            Sort by price height to low
+                                        </option>
+
+                                    </select>
+                                </div>
+
+                                {{--                                <div class="col-md-4 col-sm-4 form-group pull-right top_search pr-2">--}}
+                                {{--                                    <select name="category" class="form-control" id="select-category">--}}
+                                {{--                                        <option selected value="0">---Select category---</option>--}}
+                                {{--                                        @foreach($categories as $cate )--}}
+                                {{--                                            <option--}}
+                                {{--                                                value="{{$cate->id}}" {{isset($category) && $category == $cate->id? 'selected' : ''}}>--}}
+                                {{--                                                {{$cate->name}}--}}
+                                {{--                                            </option>--}}
+
+                                {{--                                        @endforeach--}}
+                                {{--                                    </select>--}}
+                                {{--                                </div>--}}
+
+                                {{--                                <div class="col-md-4 col-sm-4 form-group pull-right  top_search">--}}
+                                {{--                                    <input id="query" type="text" class="form-control"--}}
+                                {{--                                           value="{{$oldName ?? ""}}" name="name"--}}
+                                {{--                                           placeholder="Search for...">--}}
+                                {{--                                    <span id="delete-search">&times;</span>--}}
+                                {{--                                    <span id="icon-search-name"><i class="fa fa-search"></i></span>--}}
+                                {{--                                </div>--}}
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
                 </div>
+                @include('admin.include.flash-message')
                 <div class="x_content">
                     <div class="row">
                         <div class="col-sm-12">
@@ -112,10 +178,11 @@
                                     <table id="datatable" class="table table-striped table-bordered" style="width:100%">
                                         <thead>
                                         <tr>
+                                            <th><input type="checkbox" value="" name="selected-all"></th>
                                             <th>Name</th>
                                             <th>Image</th>
                                             <th style="width:35%;">Description</th>
-                                            <th style="width:8%;">Price <small>(vnđ)</small></th>
+                                            <th style="width:8%;">Price <small>(VND)</small></th>
                                             <th>Category</th>
                                             <th style="width:2%">Status</th>
                                             <th>CreateAt</th>
@@ -126,6 +193,8 @@
                                         <tbody>
                                         @foreach($data as $item)
                                             <tr>
+                                                <td><input type="checkbox" value="{{$item->id}}" class="selected-item">
+                                                </td>
                                                 <td>{{$item->name}}</td>
                                                 <td><img src="{{$item->firstImage}}" width="100px"
                                                          alt="">
@@ -139,38 +208,39 @@
                                                 <td>{{$item->created_at}}</td>
                                                 <td>{{$item->updated_at}}</td>
                                                 <td style="font-size: 14px; color: #0000c1;">
-                                                    <div class="tooltip-bottom">
                                                     <span class="hover-pointer dataItem"
                                                           data-toggle="modal"
                                                           data-target="#informationModal"
-                                                          data-created_at="{{$item->created_at}}"
-                                                          data-category_id="{{$item->category_id}}"
-                                                          data-updated_at="{{$item->updated_at}}"
-                                                          data-description="{{$item->description}}"
-                                                          data-thumbnail="{{$item->thumbnail}}"
-                                                          data-name="{{$item->name}}"
-                                                          data-detail="{{$item->detail}}"
-                                                          data-price="{{"$item->price"}}"
-                                                          data-status="{{$item->status}}"
-                                                          data-id="{{$item->id}}">
-                                                        <i class="fa fa-info mr-1 text-primary"></i></span>
-                                                        <span class="tooltip-text">Information</span>
-                                                    </div>
-                                                    <div class="tooltip-bottom">
-                                                        <a href="/admin/product/update/{{$item->id}}"
-                                                           class="hover-pointer">
-                                                            <i class="fa fa-edit mr-1 text-primary"></i></a>
-                                                        <span class="tooltip-text">Edit</span>
-                                                    </div>
-                                                    <div class="tooltip-bottom">
+                                                          data-item="{
+                                                            &#34;id&#34;:&#34;{{$item->id}}&#34;,
+                                                            &#34;name&#34;:&#34;{{$item->name}}&#34;,
+                                                            &#34;price&#34;:&#34;{{$item->price}}&#34;,
+                                                            &#34;category&#34;:&#34;{{$item->category->name}}&#34;,
+                                                            &#34;description&#34;:&#34;{{$item->description}}&#34;,
+                                                            &#34;thumbnail&#34;:&#34;{{$item->thumbnail}}&#34;,
+                                                            &#34;status&#34;:&#34;{{$item->status}}&#34;,
+                                                            &#34;created_at&#34;:&#34;{{$item->created_at}}&#34;,
+                                                            &#34;updated_at&#34;:&#34;{{$item->updated_at}}&#34;
+                                                            }"
+                                                          data-detail="{{$item->detail}}">
+                                                        <i class="fa fa-info mr-1 text-primary"
+                                                           data-toggle="tooltip" data-placement="bottom"
+                                                           title="Information"
+                                                           data-original-title="Tooltip bottom"></i></span>
+
+                                                    <a href="/admin/product/update/{{$item->id}}"
+                                                       class="hover-pointer">
+                                                        <i data-toggle="tooltip" data-placement="bottom" title=""
+                                                           data-original-title="Edit"
+                                                           class="fa fa-edit mr-1 text-primary"></i></a>
                                                     <span id="delete" class="hover-pointer dataItem"
                                                           data-toggle="modal"
                                                           data-target="#deleteModal"
                                                           data-name="{{$item->name}}"
                                                           data-id="{{$item->id}}">
-                                                        <i class="fa fa-trash mr-1 text-primary"></i></span>
-                                                        <span class="tooltip-text">Delete</span>
-                                                    </div>
+                                                        <i data-toggle="tooltip" data-placement="bottom" title=""
+                                                           data-original-title="Delete"
+                                                           class="fa fa-trash mr-1 text-primary"></i></span>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -185,7 +255,7 @@
                                         </div>
                                         <div class="col-sm-7">
                                             <div class="dataTables_paginate">
-                                                {{$data->links('admin.include.pagination')}}
+                                                {{$data->appends(request()->all())->links('admin.include.pagination')}}
                                             </div>
                                         </div>
                                     </div>
@@ -203,19 +273,16 @@
     @includeIf('admin.include.modalDelete',['url'=> 'product'])
     {{------------------------------------------------------------Modal Delete------------------------------------------------------}}
     {{------------------------------------------------------------Modal Information------------------------------------------------------}}
-    <?php
-    $lisFieldModal = [
-        'category_id' => "category_id",
-        'detail' => 'detail',
-        'price' => 'price',
-        'thumbnail' => 'thumbnail',
-        'status' => 'status',
-    ];
-    ?>
-    @includeIf('admin.include.modalInformation',$lisFieldModal)
+
+    @includeIf('admin.include.modalInformation')
     {{------------------------------------------------------------Modal Information------------------------------------------------------}}
 @endsection
 @section('page-script')
     <script src="/admin/js/manager-page.js"></script>
+    <script>
+        $('#nameSort').on('click', function () {
+            $(this).toggleClass("fa-soccer-ball-o")
+        })
+    </script>
 @endsection
 

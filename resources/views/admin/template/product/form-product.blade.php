@@ -47,135 +47,95 @@
                             </ul>
                         </div>
                     @endif
-                    @if(session()->has('createOk'))
-                        <div class="col-md-6 col-sm-6 success text-center p-1"><h6>{{ session()->get('createOk') }}</h6>
-                        </div>
-                    @endif
-                    @if(session()->has('nameExist'))
-                        <div class="col-md-6 col-sm-6 error text-center p-1"><h6>{{ session()->get('nameExist') }}</h6>
-                        </div>
-                    @endif
                     <div class="clearfix"></div>
                 </div>
+                @include('admin.include.flash-message')
                 <div class="x_content">
                     <br/>
+                    @if(request()->is('admin/product/updateAll*'))
+                        @php
+                        $route = route('updateAllProduct')
+                        @endphp
+                    @elseif(isset($item))
+                        @php
+                            $route = route('updateProduct')
+                        @endphp
+                    @else
+                        @php
+                            $route = route('createProduct')
+                        @endphp
+                    @endif
                     <form name="formCategory" method="post"
-                          action="{{!isset($item) ? route('createProduct') : route('updateProduct')}}">
+                          action="{{$route}}">
                         @csrf
-                        @if(isset($item))
-                            <input type="hidden" name="id" value="{{$item->id}}">
-                        @endif
-                        <div class="item form-group">
-                            <label class="col-form-label col-md-3 col-sm-3 label-align"> Name *</label>
-                            <div class="col-md-6 col-sm-6 ">
-                                <input type="text" name="name"
-                                       value="{{ $item->name ?? request()->old('name') }}"
-                                       class="form-control ">
-                                @error('name')
-                                <div class="text-danger">* {{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="item form-group">
-                            <label class="col-form-label col-md-3 col-sm-3 label-align"> Price *</label>
-                            <div class="col-md-6 col-sm-6 ">
-                                <input type="number" name="price"
-                                       value="{{ $item->price ?? request()->old('price') }}"
-                                       class="form-control ">
-                                @error('price')
-                                <div class="text-danger">* {{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group item">
-                            <label class="col-form-label col-md-3 col-sm-3 label-align">Categories *</label>
-                            <div class="col-md-6 col-sm-6 col-form-label">
-                                <select name="category_id" class="form-control">
-                                    <option selected disabled>--Select--</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{$category->id}}"
-                                            {{isset($item) && $item->category_id == $category->id ? 'selected': '' }}
-                                            {{request()->old('category_id') == $category->id ? 'selected': '' }}>
 
-                                            {{$category->name}}</option>
-                                    @endforeach
-                                </select>
-                                @error('categoryId')
-                                <div class="text-danger">* {{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <?php
-                        $status = [
+                        @if(request()->is('admin/product/updateAll*'))
+                            @include('admin.include.form-include')
 
-                            (object)[
-                                'name' => 'hết hàng',
-                                'value' => 0
-                            ],
-                            (object)[
-                                'name' => 'còn hàng',
-                                'value' => 1
-                            ],
-                        ]
-                        ?>
-                        <div class="form-group item">
-                            <label class="col-form-label col-md-3 col-sm-3 label-align">Status *</label>
-                            <div class="col-md-6 col-sm-6 col-form-label">
-                                <select name="status" class="form-control">
-                                    <option selected disabled>--Select--</option>
-                                    @foreach($status as $st)
-                                        <option value="{{$st->value}}"
-                                            {{isset($item) && $item->status == $st->value ? 'selected': '' }}>
-                                            {{$st->name}}</option>
-                                    @endforeach
-                                </select>
-                                @error('categoryId')
-                                <div class="text-danger">* {{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="item form-group">
-                            <label class="col-form-label col-md-3 col-sm-3 label-align"> Description *</label>
-                            <div class="col-md-6 col-sm-6 ">
-                                <label>
-                                    <textarea style="   width: 100%" name="description" rows="4" id="description"
-                                              cols="50">{{ $item->description ?? request()->old('description') }}</textarea>
-                                </label>
-                                @error('description')
-                                <div class="text-danger">* {{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="item form-group">
-                            <label class="col-form-label col-md-3 col-sm-3 label-align"> Image *</label>
-                            <div class="col-md-6 col-sm-6 ">
-                                <input type="hidden" class="form-control" name="thumbnail"
-                                       value="{{ $item->thumbnail ?? request()->old('thumbnail') }}">
-                                {{--                                <a href="#" id="opener">upload</a>--}}
-                                <button type="button" id="upload_widget" class="cloudinary-button mb-3">Upload files
-                                </button>
-                                @error('thumbnail')
-                                <div class="text-danger">* {{ $message }}</div>
-                                @enderror
-                                <div id="preview-img">
-
+                        @else
+                            <div class="item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3 label-align"> Name *</label>
+                                <div class="col-md-6 col-sm-6 ">
+                                    <input type="text" name="name"
+                                           value="{{ $item->name ?? request()->old('name') }}"
+                                           class="form-control ">
+                                    @error('name')
+                                    <div class="text-danger">* {{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
-                        </div>
-                        <div class="item form-group">
-                            <label class="col-form-label col-md-3 col-sm-3 label-align"> Detail content *</label>
-                            <div class="col-md-6 col-sm-6 ">
+                            @include('admin.include.form-include')
+                            <div class="item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3 label-align"> Description *</label>
+                                <div class="col-md-6 col-sm-6 ">
+                                    <label>
+                                    <textarea style="   width: 100%" name="description" rows="4" id="description"
+                                              cols="50">{{ $item->description ?? request()->old('description') }}</textarea>
+                                    </label>
+                                    @error('description')
+                                    <div class="text-danger">* {{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3 label-align"> Image *</label>
+                                <div class="col-md-6 col-sm-6 ">
+                                    <input type="hidden" class="form-control" name="thumbnail"
+                                           value="{{ $item->thumbnail ?? request()->old('thumbnail') }}">
+                                    {{--                                <a href="#" id="opener">upload</a>--}}
+                                    <button type="button" id="upload_widget" class="cloudinary-button mb-3">Upload files
+                                    </button>
+                                    @error('thumbnail')
+                                    <div class="text-danger">* {{ $message }}</div>
+                                    @enderror
+                                    <div id="preview-img">
+                                    @if(isset($item))
+                                        @foreach($item->listImage as $image)
+                                                <div class="col-md-3 col-sm-3 position-relative">
+                                                    <span class="close-preview">&#10006;</span>
+                                                    <img src="{{$image}}"
+                                                         data-delete-token = "${result.info.delete_token}"
+                                                         class="col-md-12 col-sm-12 img-thumbnail mr-2 mb-2 imagesChoice">
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3 label-align"> Detail content *</label>
+                                <div class="col-md-6 col-sm-6 ">
                                 <textarea
                                     placeholder="Enter detail product" name="detail" class="detailProduct"
                                     id="editor">{{ $item->detail ?? request()->old('detail') }}</textarea>
-                                @error('detail')
-                                <div class="text-danger">* {{ $message }}</div>
-                                @enderror
+                                    @error('detail')
+                                    <div class="text-danger">* {{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
-                        <div class="ln_solid"></div>
+                            <div class="ln_solid"></div>
+
+                        @endif
                         <div class="item form-group">
                             <div class="col-md-6 col-sm-6 offset-md-3">
                                 <a class="btn btn-primary" style="color: white" href="{{route('products')}}">Cancel</a>
@@ -183,7 +143,6 @@
                                 <button class="btn btn-success">Submit</button>
                             </div>
                         </div>
-
                     </form>
                 </div>
             </div>
