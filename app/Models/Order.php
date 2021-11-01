@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\OrderStatus;
 use App\Enums\Payment;
 use App\Enums\Sort;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -124,6 +125,21 @@ class Order extends Model
             $query->where('total_price','>=',$minPrice);
         }else if (request()->filled('maxPrice') && $minPrice == 0){
             $query->where('total_price','<=',$maxPrice);
+        }
+        return $query;
+    }
+
+    public function scopeFilterDateCreated($query)
+    {
+        $start = Carbon::parse(request()->get('startDate'));
+        $end = Carbon::parse(request()->get('endDate'));
+        if (filled($start) && filled($end)){
+            if (strtotime($start) == strtotime($end)){
+                $query->whereDate('created_at',"=",$start);
+            }else{
+                $query->whereBetween('created_at',[$start->format('Y-m-d')." 00:00:00",$end->format('Y-m-d')." 23:59:59"]);
+            }
+
         }
         return $query;
     }

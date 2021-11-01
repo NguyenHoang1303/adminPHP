@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('admin.include.head')
-    @yield('page-css')
+@include('admin.include.head')
+@yield('page-css')
+<!-- Custom Theme Style -->
+    <link href="/admin/build/css/custom.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/css/custom-admin.css">
 </head>
 
 <body class="nav-md">
@@ -26,10 +29,9 @@
                         <span>Welcome,</span>
                         <?php
                         $admin = array();
-                        if (Session::has('loginId'))
-                            {
-                                $admin = DB::table('admins')->find(Session::get('loginId'));
-                            }
+                        if (Session::has('loginId')) {
+                            $admin = DB::table('admins')->find(Session::get('loginId'));
+                        }
                         ?>
                         @if($admin != null && ($admin->fullname) != null)
                             <h2>{{$admin->fullname}}</h2>
@@ -68,12 +70,16 @@
 </div>
 @include('admin.include.script')
 @yield('page-script')
+<!-- Custom Theme Scripts -->
+<script src="/admin/build/js/custom.min.js"></script>
 <script>
     //Get the button
     var mybutton = document.getElementById("btnToTop");
 
     // When the user scrolls down 20px from the top of the document, show the button
-    window.onscroll = function() {scrollFunction()};
+    window.onscroll = function () {
+        scrollFunction()
+    };
 
     function scrollFunction() {
         if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {

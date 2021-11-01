@@ -1,6 +1,19 @@
 @extends('admin.master-admin')
 @section('page-css')
+    {{--    date picker--}}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <!-- Ion.RangeSlider -->
+    <!--Plugin CSS file with desired skin-->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
     <style>
+        .btn-price {
+            background-color: #20b426;
+            padding: 3px;
+            border-radius: 7px;
+            color: #FFFFFF;
+        }
+
         .fa-sort-amount-desc {
             cursor: pointer;
         }
@@ -119,21 +132,7 @@
                                 <span class="delete-search">&times;</span>
                                 <span class="icon-search"><i class="fa fa-search"></i></span>
                             </div>
-                            <div class="col-md-3 col-sm-3 form-group pull-right pr-2 top_search">
-                                <input type="number" class=" form-control query"
-                                       value="{{$oldMinPrice ?? ""}}" name="minPrice"
-                                       placeholder="Min price...">
-                                <span class="delete-search">&times;</span>
-                                <span class="icon-search"><i class="fa fa-search"></i></span>
-                            </div>
-                            <div class="col-md-3 col-sm-3 form-group pull-right pr-2 top_search">
-                                <input type="number" class=" form-control query"
-                                       value="{{$oldMaxPrice ?? ""}}" name="maxPrice"
-                                       placeholder="Max price...">
-                                <span class="delete-search">&times;</span>
-                                <span class="icon-search"><i class="fa fa-search"></i></span>
-                            </div>
-                            {{--        Sort name             --}}
+                            {{--        Min max price       --}}
                             <div class="col-md-3 col-sm-3 form-group pull-right top_search pr-2">
                                 <select name="sortName" class="form-control sortOrder">
 
@@ -217,10 +216,40 @@
                                         value="{{SORT_ASC}}" {{isset($oldCreated_at) && $oldCreated_at == SORT_ASC ? 'selected' : ''}}>
                                         Last created date
                                     </option>
-
-
-
                                 </select>
+                            </div>
+                            <div
+                                class="col-md-3 col-sm-3 form-group pull-right pr-2 top_search">
+{{--                                \Carbon\Carbon::now('Asia/Ho_Chi_Minh')->isoFormat('YYYY-MM-DD')--}}
+                                <input type="hidden" name="startDate" id="startDate" value="{{$oldStartDate ?? ""}}">
+                                <input type="hidden" name="endDate" id="endDate" value="{{$oldEndDate ?? ""}}">
+                                @php
+                                    use Carbon\Carbon;
+                                   $startCarbon = Carbon::now('Asia/Ho_Chi_Minh')->subDay(30)->isoFormat('MM/DD/YYYY');
+                                   $endCarbon = Carbon::now('Asia/Ho_Chi_Minh')->isoFormat('MM/DD/YYYY');
+                                if (isset($oldStartDate) && isset($oldEndDate)){
+                                    $oldStartDate = Carbon::parse($oldStartDate)->isoFormat('MM/DD/YYYY');
+                                    $oldEndDate = Carbon::parse($oldEndDate)->isoFormat('MM/DD/YYYY');
+                                }
+
+                                @endphp
+                                <input id="picker" style="cursor: pointer ;background-color: #FFFFFF"
+                                       class=" form-control query"
+                                       value="{{isset($oldStartDate) && isset($oldEndDate) ? $oldStartDate ." - ". $oldEndDate : $startCarbon .' - '. $endCarbon }}"
+                                       placeholder="Search by date...">
+                                <span class="delete-search">&times;</span>
+                                <span class="icon-search"><i
+                                        class="fa fa-search"></i></span>
+                            </div>
+                            <div class="col-md-6 col-sm-6 dis-flex align-baseline">
+                                <div class="col-md-11 col-sm-11" style="padding-right: 20px" >
+                                    <input id="js-range-slider"/>
+                                    <input type="hidden" name="minPrice" id="js-input-from" value="0"/>
+                                    <input type="hidden" name="maxPrice" id="js-input-to" value="0"/>
+                                </div>
+                                <div class="col-md-1 col-sm-1 mt-1 p-0">
+                                    <button class="btn-price" style="margin-top: 8px;margin-right: 0;float: right;">Search</button>
+                                </div>
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -312,11 +341,86 @@
             </div>
         </div>
     </div>
+
     @includeIf('admin.include.modalDelete',['url'=> 'order'])
 @endsection
 @section('page-script')
+    {{--    date picker--}}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <!--Plugin JavaScript file-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+    {{--moment--}}
     <script src="/admin/js/manager-page.js"></script>
     <script>
+        {{--================       date picker flatpick========================================== --}}
+        $('#picker').daterangepicker({
+                opens: 'left'
+            }
+            , function (startDate, endDate, label) {
+                $('#startDate').val(startDate.format('YYYY-MM-DD'))
+                $('#endDate').val(endDate.format('YYYY-MM-DD'))
+            });
+
+        {{--        ================================ thanh trượt price =================================== --}}
+        var $range = $("#js-range-slider"),
+            $inputFrom = $("#js-input-from"),
+            $inputTo = $("#js-input-to"),
+            instance,
+            min = 0,
+            max = 4999999,
+            from = 0,
+            to = 0;
+
+        $range.ionRangeSlider({
+            skin: "modern",
+            type: "double",
+            min: min,
+            max: max,
+            from: 0,
+            to: 1999999,
+            onStart: updateInputs,
+            onChange: updateInputs
+        });
+        instance = $range.data("ionRangeSlider");
+
+        function updateInputs(data) {
+            from = data.from;
+            to = data.to;
+
+            $inputFrom.prop("value", from);
+            $inputTo.prop("value", to);
+        }
+
+        $inputFrom.on("input", function () {
+            var val = $(this).prop("value");
+
+            // validate
+            if (val < min) {
+                val = min;
+            } else if (val > to) {
+                val = to;
+            }
+
+            instance.update({
+                from: val
+            });
+        });
+
+        $inputTo.on("input", function () {
+            var val = $(this).prop("value");
+
+            // validate
+            if (val < from) {
+                val = from;
+            } else if (val > max) {
+                val = max;
+            }
+
+            instance.update({
+                to: val
+            });
+        });
+        //====================================================================================
         //lấy value attribute của các class
         let list = $(".status-order[data-id]").map(function () {
             return parseInt($(this).attr("data-id"));
