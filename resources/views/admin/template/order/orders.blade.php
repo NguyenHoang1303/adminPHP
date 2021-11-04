@@ -219,10 +219,6 @@
                                 </select>
                             </div>
                             <div
-                                class="col-md-3 col-sm-3 form-group pull-right pr-2 top_search">
-{{--                                \Carbon\Carbon::now('Asia/Ho_Chi_Minh')->isoFormat('YYYY-MM-DD')--}}
-                                <input type="hidden" name="startDate" id="startDate" value="{{$oldStartDate ?? ""}}">
-                                <input type="hidden" name="endDate" id="endDate" value="{{$oldEndDate ?? ""}}">
                                 @php
                                     use Carbon\Carbon;
                                    $startCarbon = Carbon::now('Asia/Ho_Chi_Minh')->subDay(30)->isoFormat('MM/DD/YYYY');
@@ -233,6 +229,10 @@
                                 }
 
                                 @endphp
+                                class="col-md-3 col-sm-3 form-group pull-right pr-2 top_search">
+                                <input type="hidden" name="startDate" id="startDate" value="{{$oldStartDate ?? $startCarbon}}">
+                                <input type="hidden" name="endDate" id="endDate" value="{{$oldEndDate ?? $endCarbon}}">
+
                                 <input id="picker" style="cursor: pointer ;background-color: #FFFFFF"
                                        class=" form-control query"
                                        value="{{isset($oldStartDate) && isset($oldEndDate) ? $oldStartDate ." - ". $oldEndDate : $startCarbon .' - '. $endCarbon }}"
