@@ -2,6 +2,15 @@
 <html lang="en">
 <head>
 @include('admin.include.head')
+<!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DN4RJKYX1Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-DN4RJKYX1Z');
+    </script>
 @yield('page-css')
 <!-- Custom Theme Style -->
     <link href="/admin/build/css/custom.min.css" rel="stylesheet">
