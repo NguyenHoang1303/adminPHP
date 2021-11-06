@@ -579,7 +579,7 @@ Hướng dẫn sử dụng comment facebook trên trang.
   
 
 - Hướng dẫn live chat - 1 min.
-- Đăng ký tài khoản https://www.tawk.to/
+- Đăng ký tài khoản **[https://www.tawk.to/]**
 
 - Copy code paste vào trang cần chat.
 
