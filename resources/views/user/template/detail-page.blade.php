@@ -85,7 +85,7 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#description" role="tab">Description</a>
+                        <a class="nav-link active" data-toggle="tab" href="#detail" role="tab">Detail</a>
                     </li>
 
                     <li class="nav-item">
@@ -100,10 +100,10 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <!-- - -->
-                    <div class="tab-pane fade show active" id="description" role="tabpanel">
+                    <div class="tab-pane fade show active" id="detail" role="tabpanel">
                         <div class="p-t-30">
                             <p class="txt-s-112 cl9">
-                                There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
+                                {!! $product->detail !!}
                             </p>
                         </div>
                     </div>
@@ -177,7 +177,10 @@
                                     </div>
 
                                     <p class="txt-s-101 cl6">
-                                        Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur.
+                                        Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots
+                                        in a piece of classical Latin literature from 45 BC, making it over 2000 years
+                                        old. Richard McClintock, a Latin professor at Hampden-Sydney College in
+                                        Virginia, looked up one of the more obscure Latin words, consectetur.
                                     </p>
                                 </div>
                             </div>
@@ -213,15 +216,19 @@
 
                                 <div class="row p-t-12">
                                     <div class="col-sm-6 p-b-30">
-                                        <input class="txt-s-101 cl3 plh1 size-a-25 bo-all-1 bocl11 focus1 p-rl-20" type="text" name="name" placeholder="Name *">
+                                        <input class="txt-s-101 cl3 plh1 size-a-25 bo-all-1 bocl11 focus1 p-rl-20"
+                                               type="text" name="name" placeholder="Name *">
                                     </div>
 
                                     <div class="col-sm-6 p-b-30">
-                                        <input class="txt-s-101 cl3 plh1 size-a-25 bo-all-1 bocl11 focus1 p-rl-20" type="text" name="email" placeholder="Email *">
+                                        <input class="txt-s-101 cl3 plh1 size-a-25 bo-all-1 bocl11 focus1 p-rl-20"
+                                               type="text" name="email" placeholder="Email *">
                                     </div>
 
                                     <div class="col-12 p-b-30">
-                                        <textarea class="txt-s-101 cl3 plh1 size-a-26 bo-all-1 bocl11 focus1 p-rl-20 p-tb-10" name="review" placeholder="Your review *"></textarea>
+                                        <textarea
+                                            class="txt-s-101 cl3 plh1 size-a-26 bo-all-1 bocl11 focus1 p-rl-20 p-tb-10"
+                                            name="review" placeholder="Your review *"></textarea>
                                     </div>
                                 </div>
 
@@ -309,6 +316,9 @@
 
 @endsection
 @section('page-script')
+    <script src="/user/vendor/lightbox2/js/lightbox.min.js"></script>
+    <script src="/user/vendor/bootstrap/js/popper.js"></script>
+    <script src="/user/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/c704dbde0e.js" crossorigin="anonymous"></script>
     <script src="/user/vendor/noui/nouislider.min.js"></script>
@@ -316,7 +326,7 @@
     <script src="/user/vendor/slide100/slide100.js"></script>
     <script src="/user/js/slide100-custom.js"></script>
     <!--===============================================================================================-->
-    <script src="/user/js/main.js"></script>
+{{--    <script src="/user/js/main.js"></script>--}}
     <script>
         var swiper = new Swiper(".mySwiper", {
             navigation: {

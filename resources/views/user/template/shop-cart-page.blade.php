@@ -86,8 +86,9 @@
                                                 Update Cart
                                             </button>
                                             <a href="/cart/delete/{{$item->id}}"
-                                                class=" ml-2 pt-1" style="border-radius: 2px; font-size: 14px; color: #a7a7a8">
-                                            Delete
+                                               class=" ml-2 pt-1"
+                                               style="border-radius: 2px; font-size: 14px; color: #a7a7a8">
+                                                Delete
                                             </a>
                                         </div>
                                     </td>
@@ -103,9 +104,9 @@
                 </table>
             </div>
 
-            <div class="flex-w flex-sb-m p-t-20">
+            {{--            <div class="flex-w flex-sb-m p-t-20">--}}
 
-            </div>
+            {{--            </div>--}}
 
 
             <div class="flex-col-l p-t-68">
@@ -134,7 +135,8 @@
                 </div>
 
                 <div class="dis-flex">
-                    <a href="/cart/checkout" class="flex-c-m txt-s-105 cl0 bg10 size-a-34 hov-btn2 trans-04 p-rl-10 m-t-43 mr-3">
+                    <a href="/cart/checkout"
+                       class="flex-c-m txt-s-105 cl0 bg10 size-a-34 hov-btn2 trans-04 p-rl-10 m-t-43 mr-3">
                         proceed to checkout
                     </a>
                     <a href="/shop" style="color: #FFF;"

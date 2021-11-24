@@ -46,6 +46,7 @@ class ShopController extends Controller
 
     }
 
+
     function getInformation($id)
     {
         $arrId = [];
